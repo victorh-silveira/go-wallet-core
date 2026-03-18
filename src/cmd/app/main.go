@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
 	"github.com/victor-silveira/go-wallet-core/src/internal/infrastructure/repository/postgres"
@@ -45,9 +46,17 @@ func main() {
 		http.ServeFile(w, r, "api/index.html")
 	})
 
+	server := &http.Server{
+		Addr:              ":8080",
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       15 * time.Second,
+	}
+
 	fmt.Println("Server listening on :8080")
 	fmt.Println("[TESTE] Conta default carregada: ACC-001 | Saldo: R$ 500,00")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed to start: %v", err)
 	}
+
 }

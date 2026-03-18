@@ -51,6 +51,7 @@ func cleanCaches() {
 	}
 
 	for _, cmd := range commands {
+
 		_ = exec.Command(cmd[0], cmd[1:]...).Run()
 	}
 
@@ -64,6 +65,7 @@ func cleanCaches() {
 		for _, pattern := range patterns {
 			matched, _ := filepath.Match(pattern, info.Name())
 			if matched {
+
 				_ = os.RemoveAll(path)
 				removed++
 				break
@@ -102,7 +104,8 @@ func purifyComments() {
 }
 
 func processFile(path string) bool {
-	file, err := os.Open(path)
+
+	file, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return false
 	}
@@ -167,7 +170,8 @@ func processFile(path string) bool {
 	}
 
 	_ = file.Close()
-	_ = os.WriteFile(path, output.Bytes(), 0644)
+
+	_ = os.WriteFile(filepath.Clean(path), output.Bytes(), 0600)
 	return true
 }
 
