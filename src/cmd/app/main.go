@@ -30,7 +30,7 @@ func main() {
 
 	ctx := context.Background()
 	initialAcc, _ := entity.NewAccount("ACC-001", "USER-001")
-	initialAcc.UpdateBalance(500.0)
+	_ = initialAcc.UpdateBalance(500.0)
 	_ = walletRepo.SaveAccount(ctx, initialAcc)
 
 	http.HandleFunc("/users", userHandler.CreateUser)
