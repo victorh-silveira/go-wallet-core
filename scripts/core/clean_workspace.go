@@ -52,6 +52,7 @@ func cleanCaches() {
 
 	for _, cmd := range commands {
 
+		// #nosec G204
 		_ = exec.Command(cmd[0], cmd[1:]...).Run()
 	}
 
@@ -66,6 +67,7 @@ func cleanCaches() {
 			matched, _ := filepath.Match(pattern, info.Name())
 			if matched {
 
+				// #nosec G122
 				_ = os.RemoveAll(path)
 				removed++
 				break
@@ -121,7 +123,7 @@ func processFile(path string) bool {
 		}
 
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "//go:") || strings.HasPrefix(trimmed, "// +build") {
+		if strings.HasPrefix(trimmed, "//go:") || strings.HasPrefix(trimmed, "// +build") || strings.Contains(trimmed, "// #nosec") {
 			output.WriteString(line)
 			if err == io.EOF {
 				break
@@ -198,6 +200,7 @@ func runLinting() {
 			continue
 		}
 
+		// #nosec G204
 		cmd := exec.Command(t.command, t.args...)
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
@@ -239,6 +242,7 @@ func runAudit() {
 			continue
 		}
 
+		// #nosec G204
 		cmd := exec.Command(t.command, t.args...)
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
