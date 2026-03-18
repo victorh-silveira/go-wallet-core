@@ -249,4 +249,3 @@ func runAudit() {
 	}
 	fmt.Println("      OK: Auditoria técnica concluída.")
 }
-
