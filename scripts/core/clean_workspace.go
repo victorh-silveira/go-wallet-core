@@ -123,7 +123,15 @@ func processFile(path string) bool {
 		}
 
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "//go:") || strings.HasPrefix(trimmed, "// +build") || strings.Contains(trimmed, "// #nosec") {
+		// Preservar diretivas do compilador e tags de auditoria (nosec, nolint, etc)
+		lowerTrimmed := strings.ToLower(trimmed)
+		isDirective := strings.HasPrefix(trimmed, "//go:") ||
+			strings.HasPrefix(trimmed, "// +build") ||
+			strings.Contains(lowerTrimmed, "nosec") ||
+			strings.Contains(lowerTrimmed, "nolint") ||
+			strings.Contains(lowerTrimmed, "noqa")
+
+		if isDirective {
 			output.WriteString(line)
 			if err == io.EOF {
 				break
@@ -150,12 +158,6 @@ func processFile(path string) bool {
 			}
 
 			if !inString && i+1 < len(runes) && runes[i] == '/' && runes[i+1] == '/' {
-
-				comment := string(runes[i:])
-				lowerComment := strings.ToLower(comment)
-				if strings.Contains(lowerComment, "nolint") || strings.Contains(lowerComment, "lint:") || strings.Contains(lowerComment, "noqa") {
-					cleanLine = strings.TrimRight(line, "\r\n")
-				}
 				foundComment = true
 				break
 			}

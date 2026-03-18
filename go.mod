@@ -1,3 +1,3 @@
 module github.com/victor-silveira/go-wallet-core
 
-go 1.21
+go 1.23.0
