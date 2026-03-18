@@ -172,23 +172,30 @@ func processFile(path string) bool {
 }
 
 func runLinting() {
-	fmt.Println("\n[3/4] Executando Automação de Estilo e Padrões Go (fmt + vet)...")
+	fmt.Println("\n[3/4] Executando Automação de Estilo, Padrões e Qualidade (CI Sync)...")
 
 	tools := []struct {
-		name string
-		args []string
+		name    string
+		command string
+		args    []string
 	}{
-		{"Go Fmt", []string{"fmt", "./..."}},
-		{"Go Vet", []string{"vet", "./..."}},
-		{"Go Mod Tidy", []string{"mod", "tidy"}},
+		{"Go Fmt", "go", []string{"fmt", "./..."}},
+		{"Go Vet", "go", []string{"vet", "./..."}},
+		{"Go Mod Tidy", "go", []string{"mod", "tidy"}},
+		{"GolangCI-Lint", "golangci-lint", []string{"run", "./..."}},
 	}
 
 	failed := false
 	for _, t := range tools {
 		fmt.Printf("      -> %s: Processando...\n", t.name)
-		cmd := exec.Command("go", t.args...)
-		var out, stderr bytes.Buffer
-		cmd.Stdout = &out
+
+		if _, err := exec.LookPath(t.command); err != nil {
+			fmt.Printf("      [AVISO] %s não instalado localmente. Pulando...\n", t.name)
+			continue
+		}
+
+		cmd := exec.Command(t.command, t.args...)
+		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
 		err := cmd.Run()
 
@@ -202,14 +209,44 @@ func runLinting() {
 	}
 
 	if failed {
-		fmt.Println("\n[!] ERRO: O código não atende aos padrões de qualidade sênior.")
+		fmt.Println("\n[!] ERRO: O código não atende aos padrões de qualidade sênior (CI Sync).")
 		os.Exit(1)
 	}
-	fmt.Println("      OK: Sincronização estrutural de estilo finalizada.")
+	fmt.Println("      OK: Sincronização de estilo e linting finalizada.")
 }
 
 func runAudit() {
-	fmt.Println("\n[4/4] Auditoria de Documentação (Selo de Qualidade Go Doc)...")
+	fmt.Println("\n[4/4] Auditoria de Segurança e Vulnerabilidades (CI Sync)...")
 
-	fmt.Println("      OK: Auditoria técnica concluída. Documentação em conformidade.")
+	tools := []struct {
+		name    string
+		command string
+		args    []string
+	}{
+		{"Gosec", "gosec", []string{"./..."}},
+		{"Govulncheck", "govulncheck", []string{"./..."}},
+	}
+
+	for _, t := range tools {
+		fmt.Printf("      -> %s: Analisando...\n", t.name)
+
+		if _, err := exec.LookPath(t.command); err != nil {
+			fmt.Printf("      [AVISO] %s não instalado localmente. Pulando...\n", t.name)
+			continue
+		}
+
+		cmd := exec.Command(t.command, t.args...)
+		var stderr bytes.Buffer
+		cmd.Stderr = &stderr
+		err := cmd.Run()
+
+		if err != nil {
+			fmt.Printf("      [AVISO] %s encontrou pontos de atenção:\n", t.name)
+			fmt.Println(stderr.String())
+		} else {
+			fmt.Printf("      OK: %s sem problemas críticos.\n", t.name)
+		}
+	}
+	fmt.Println("      OK: Auditoria técnica concluída.")
 }
+
