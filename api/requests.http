@@ -1,0 +1,59 @@
+### Go Wallet Core API - API Playground
+
+@host = http://localhost:8080
+
+### [GET] Health Check
+GET {{host}}/health
+Accept: application/json
+
+---
+
+### [POST] Criar Usuário (User)
+POST {{host}}/users
+Content-Type: application/json
+
+{
+    "id": "USER-001",
+    "name": "Victor Silveira",
+    "email": "victor@teste.com"
+}
+
+---
+
+### [POST] Depositar Crédito (Deposit) na Conta Default
+# @account_id = ACC-001 (Pré-carregada no main.go)
+POST {{host}}/wallet/transaction
+Content-Type: application/json
+
+{
+    "account_id": "ACC-001",
+    "type": "CREDIT",
+    "amount": 250.50,
+    "description": "Depósito Mensal via PIX"
+}
+
+---
+
+### [POST] Sacar Débito (Withdraw)
+POST {{host}}/wallet/transaction
+Content-Type: application/json
+
+{
+    "account_id": "ACC-001",
+    "type": "DEBIT",
+    "amount": 100.00,
+    "description": "Pagamento de Academia"
+}
+
+---
+
+### [POST] Tentar Saque Sem Saldo (Error Case)
+POST {{host}}/wallet/transaction
+Content-Type: application/json
+
+{
+    "account_id": "ACC-001",
+    "type": "DEBIT",
+    "amount": 10000.00,
+    "description": "Tentativa Frustrada"
+}

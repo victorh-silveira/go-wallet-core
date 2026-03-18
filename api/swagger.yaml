@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: Go Wallet Core API
+  description: API de Microserviço de Carteira Digital (Wallet & Ledger) com suporte a transações imutáveis.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Verifica o status de saúde da aplicação.
+      responses:
+        '200':
+          description: Sistema operacional
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: 1.0.0
+
+  /users:
+    post:
+      summary: Criar Usuário
+      description: Registra um novo usuário no sistema.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - name
+                - email
+              properties:
+                id:
+                  type: string
+                  example: "USER-001"
+                name:
+                  type: string
+                  example: "Victor Silveira"
+                email:
+                  type: string
+                  example: "victor@teste.com"
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+        '400':
+          description: Requisição inválida
+        '422':
+          description: Erro de validação de negócio
+
+  /wallet/transaction:
+    post:
+      summary: Processar Transação
+      description: Registra um débito ou crédito em uma carteira específica.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - account_id
+                - type
+                - amount
+                - description
+              properties:
+                account_id:
+                  type: string
+                  example: "ACC-001"
+                type:
+                  type: string
+                  enum: [DEBIT, CREDIT]
+                  example: "CREDIT"
+                amount:
+                  type: number
+                  format: float
+                  example: 250.50
+                description:
+                  type: string
+                  example: "Pagamento de Aluguel"
+      responses:
+        '200':
+          description: Transação processada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  new_balance:
+                    type: number
+                    example: 750.50
+        '422':
+          description: Saldo insuficiente ou conta inválida

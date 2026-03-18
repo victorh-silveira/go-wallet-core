@@ -25,6 +25,43 @@ Se você tiver o Go instalado:
 go run src/cmd/app/main.go
 ```
 
+## 📖 Documentação da API
+
+A API segue padrões REST e possui documentação técnica disponível na pasta `api/`. 
+
+- [OpenAPI (Swagger)](api/swagger.yaml)
+- [REST Client (VSCode)](api/requests.http)
+
+### Endpoints Disponíveis
+
+#### **1. Health Check**
+`GET /health`
+Verifica se o servidor está online.
+```bash
+curl.exe -X GET "http://localhost:8080/health"
+```
+
+#### **2. Criar Usuário**
+`POST /users`
+Cria um novo usuário no sistema.
+- **Body**: `{ "id": string, "name": string, "email": string }`
+```bash
+curl.exe -X POST "http://localhost:8080/users" \
+  -H "Content-Type: application/json" \
+  -d '{ \"id\": \"USER-001\", \"name\": \"Victor\", \"email\": \"victor@teste.com\" }'
+```
+
+#### **3. Processar Transação (Ledger)**
+`POST /wallet/transaction`
+Registra movimentos de entrada (CREDIT) ou saída (DEBIT) na carteira.
+- **Body**: `{ "account_id": string, "type": "DEBIT"|"CREDIT", "amount": float, "description": string }`
+```bash
+# Exemplo de Crédito
+curl.exe -X POST "http://localhost:8080/wallet/transaction" \
+  -H "Content-Type: application/json" \
+  -d '{ \"account_id\": \"ACC-001\", \"type\": \"CREDIT\", \"amount\": 250.50, \"description\": \"Recebimento PIX\" }'
+```
+
 ## Próximos Passos
 
 1.  Configurar persistência real (PostgreSQL, MongoDB, etc.) no `internal/infrastructure`.

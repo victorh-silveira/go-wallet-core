@@ -37,6 +37,14 @@ func main() {
 	http.HandleFunc("/wallet/transaction", walletHandler.Transaction)
 	http.HandleFunc("/health", healthHandler.HealthCheck)
 
+	http.HandleFunc("/swagger.yaml", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "api/swagger.yaml")
+	})
+
+	http.HandleFunc("/docs", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "api/index.html")
+	})
+
 	fmt.Println("Server listening on :8080")
 	fmt.Println("[TESTE] Conta default carregada: ACC-001 | Saldo: R$ 500,00")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
