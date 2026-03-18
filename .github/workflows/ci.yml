@@ -2,7 +2,7 @@ name: "Pipeline de CI"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
     paths:
       - '.github/**'
       - '.releaserc.json'
@@ -13,7 +13,7 @@ on:
       - 'scripts/**'
 
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 concurrency:
@@ -57,7 +57,7 @@ jobs:
   release:
     name: "Release Automática"
     needs: security
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -85,7 +85,7 @@ jobs:
           # Em fluxos com force-push, tags podem ficar apontando para commits descartados.
           # Este loop identifica tags 'v*' que não são ancestrais de main e as remove do remoto.
           for tag in $(git tag -l "v*"); do
-            if ! git merge-base --is-ancestor "$tag" main; then
+            if ! git merge-base --is-ancestor "$tag" main 2>/dev/null && ! git merge-base --is-ancestor "$tag" master 2>/dev/null; then
               echo ">> Deletando tag órfã detectada no remoto: $tag"
               git push origin --delete "$tag" || true
               git tag -d "$tag" || true
