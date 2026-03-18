@@ -1,0 +1,27 @@
+# --- Normalização de Texto ---
+# Trata arquivos de texto para normalizar quebras de linha (LF) no repositório
+* text=auto
+
+# Arquivos específicos com quebra de linha forçada (LF)
+*.go text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.mjs text eol=lf
+
+# --- Arquivos Binários ---
+# Força o tratamento como binário para evitar corrupção durante o commit
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.mov binary
+*.mp4 binary
+
+# --- Atributos de Exportação (git archive) ---
+# Impede que arquivos de configuração interna entrem em pacotes zip/tar.gz
+.gitignore export-ignore
+.gitattributes export-ignore
+.releaserc.json export-ignore
+commitlint.config.mjs export-ignore

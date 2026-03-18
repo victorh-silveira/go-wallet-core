@@ -1,0 +1,43 @@
+name: 'Ação de Release Automática'
+description: 'Gera tags e releases baseado no histórico de commits via semantic-release (Go contextual)'
+inputs:
+  github_token:
+    description: 'Token do GitHub'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Configurar Go"
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+        cache: true
+
+    - name: "Configurar Node.js"
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
+    - name: "Instalar Dependências do Semantic Release"
+      shell: bash
+      run: |
+        npm install -g semantic-release \
+          @semantic-release/commit-analyzer \
+          @semantic-release/release-notes-generator \
+          @semantic-release/changelog \
+          @semantic-release/git \
+          @semantic-release/exec \
+          @semantic-release/github \
+          conventional-changelog-conventionalcommits
+
+    - name: "Executar Semantic Release"
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Executa o release original
+        npx semantic-release

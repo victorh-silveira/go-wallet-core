@@ -1,0 +1,14 @@
+# 🚀 Aether Release: {VERSION}
+
+O sistema de CI/CD detectou uma nova evolução no ecossistema **Aether Singularity M3**.
+
+### 📊 Detalhes da Atualização
+- **Versão:** `{VERSION}`
+- **Data:** `{DATE}`
+- **Alvo:** `R_50 M3`
+
+### 🛠️ Registro de Alterações
+{CHANGELOG}
+
+---
+*Este release foi gerado automaticamente pelo motor de Governança Aether. 🌌*

@@ -1,0 +1,99 @@
+name: "Pipeline de CI"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/**'
+      - '.releaserc.json'
+      - 'commitlint.config.mjs'
+      - 'go.mod'
+      - 'go.sum'
+      - 'src/**'
+      - 'scripts/**'
+
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: "Auditoria de Qualidade"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout do Código"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Auditoria de Qualidade de Código"
+        uses: ./.github/actions/lint
+
+      - name: "Auditoria de Commit Messages (Convention)"
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: 'commitlint.config.mjs'
+
+  security:
+    name: "Scan de Segurança"
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout do Código"
+        uses: actions/checkout@v4
+
+      - name: "Scan de Segurança e Vulnerabilidades"
+        uses: ./.github/actions/security
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: "Release Automática"
+    needs: security
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: "Checkout do Código"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Sincronizar e Limpar Tags"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Limpando tags locais para evitar conflitos..."
+          git tag -l | xargs -n 1 git tag -d || true
+          
+          echo "Sincronizando com o remoto..."
+          git fetch --tags --force --prune
+          
+          echo "Analisando tags órfãs (não pertencentes ao histórico de main)..."
+          # Em fluxos com force-push, tags podem ficar apontando para commits descartados.
+          # Este loop identifica tags 'v*' que não são ancestrais de main e as remove do remoto.
+          for tag in $(git tag -l "v*"); do
+            if ! git merge-base --is-ancestor "$tag" main; then
+              echo ">> Deletando tag órfã detectada no remoto: $tag"
+              git push origin --delete "$tag" || true
+              git tag -d "$tag" || true
+            fi
+          done
+
+      - name: "Release Automática"
+        uses: ./.github/actions/release
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+

@@ -1,0 +1,28 @@
+name: 'Go Quality Gates'
+description: 'Executa golangci-lint, go fmt e go vet'
+runs:
+  using: "composite"
+  steps:
+    - name: "Configurar Go"
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+        cache: true
+
+    - name: "Verificar Formatação (go fmt)"
+      shell: bash
+      run: |
+        if [ -n "$(go fmt ./...)" ]; then
+          echo "Erro: Arquivos não formatados detectados. Rode 'go fmt ./...'"
+          exit 1
+        fi
+
+    - name: "Executar Go Vet"
+      shell: bash
+      run: go vet ./...
+
+    - name: "Executar golangci-lint"
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+        args: --timeout=5m
