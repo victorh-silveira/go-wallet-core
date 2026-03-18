@@ -27,26 +27,31 @@
         "presetConfig": {
           "types": [
             { "type": "feat", "section": "🚀 Nova Funcionalidade", "hidden": false },
-            { "type": "fix", "section": "🐛 Bug Fix", "hidden": false },
-            { "type": "perf", "section": "⚡ Performance", "hidden": false },
-            { "type": "refactor", "section": "🛠️ Refactor/Docs/Tests", "hidden": false },
-            { "type": "style", "hidden": true },
-            { "type": "docs", "hidden": true },
-            { "type": "build", "hidden": true },
-            { "type": "ci", "hidden": true },
-            { "type": "revert", "section": "⏪ Reversão", "hidden": false },
-            { "type": "test", "hidden": true },
-            { "type": "chore", "hidden": true },
-            { "type": "breaking", "section": "💥 BREAKING CHANGES", "hidden": false }
+            { "type": "fix", "section": "🐛 Correções de Erros", "hidden": false },
+            { "type": "perf", "section": "⚡ Melhorias de Performance", "hidden": false },
+            { "type": "refactor", "section": "🛠️ Refatorações de Código", "hidden": false },
+            { "type": "docs", "section": "📖 Documentação", "hidden": false },
+            { "type": "style", "section": "💅 Estilo e Formatação", "hidden": false },
+            { "type": "test", "section": "🧪 Testes e Qualidade", "hidden": false },
+            { "type": "build", "section": "📦 Build e Dependências", "hidden": false },
+            { "type": "ci", "section": "👷 Integração Contínua (CI/CD)", "hidden": false },
+            { "type": "revert", "section": "⏪ Reversões", "hidden": false },
+            { "type": "chore", "section": "🧹 Manutenção e Configurações", "hidden": false },
+            { "type": "breaking", "section": "💥 MUDANÇAS QUEBRANTES (BREAKING)", "hidden": false }
           ]
         }
       }
     ],
-    "@semantic-release/changelog",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "go mod edit -go=${nextRelease.version} && go mod tidy"
+        "prepareCmd": "go mod tidy"
       }
     ],
     [
