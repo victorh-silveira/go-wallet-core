@@ -6,7 +6,7 @@
 
 ## [1.0.2](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.1...v1.0.2) (2026-03-19)
 
-### 🐛 Bug Fix
+### Bug Fix
 
 * **infra:** reforcar validacoes de transacao e qualidade local ([c531ff5](https://github.com/victorh-silveira/go-wallet-core/commit/c531ff5e3c3f7d87857ebdfbfb4d8942913ec0b1))
 

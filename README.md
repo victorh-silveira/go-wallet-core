@@ -69,8 +69,6 @@ chore(config): ajustar pipeline de release
 
 Regras importantes:
 
-- Emoji em mensagem de commit e **proibido**.
-- Emoji existe **somente** na geracao das secoes do `CHANGELOG.md`.
 - `type` e `scope` devem respeitar `commitlint.config.mjs`.
 
 ## Testes
@@ -91,7 +89,7 @@ Testes adicionados no projeto:
 
 - A liberacao e automatica na branch `main` via `semantic-release`.
 - O changelog oficial e versionado no arquivo `CHANGELOG.md`.
-- O commit automatico de release segue o formato sem emoji:
+- O commit automatico de release segue o formato:
   - `chore(release): <versao> [skip ci]`
 
 ## Documentação da API
