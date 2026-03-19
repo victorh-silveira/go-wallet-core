@@ -44,6 +44,7 @@ export default {
     "subject-empty": [2, "never"],
     "type-empty": [2, "never"],
     "header-max-length": [2, "always", 100],
+    "body-max-line-length": [2, "always", 100],
     "subject-case": [0],
   },
 };
