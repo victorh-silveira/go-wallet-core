@@ -63,7 +63,7 @@ Regras importantes:
 - O commit automatico de release segue o formato sem emoji:
   - `chore(release): <versao> [skip ci]`
 
-## 📖 Documentação da API
+## Documentação da API
 
 A API segue padrões REST e possui documentação técnica disponível na pasta `api/`. 
 
