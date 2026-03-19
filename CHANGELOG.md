@@ -1,3 +1,17 @@
+## [1.0.1](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.0...v1.0.1) (2026-03-19)
+
+### 🧹 Chore
+
+* **config:** alinhar ciclo de commit, pre-commit e release ([452cdcc](https://github.com/victorh-silveira/go-wallet-core/commit/452cdcc62998fa0bc192c31d1aee02504c56a944))
+
+### 📚 Documentacao
+
+* **readme:** remover emoji do README ([7301666](https://github.com/victorh-silveira/go-wallet-core/commit/7301666b2fe9cd07730e9644e454591aad11bb73))
+
+### 🐛 Bug Fix
+
+* **config:** alinhar validacao local com commitlint do CI ([1f2413b](https://github.com/victorh-silveira/go-wallet-core/commit/1f2413b74055b09263a7afb22a8abb9f1ca9f651))
+
 ## 1.0.0 (2026-03-18)
 
 ### 🚀 Nova Funcionalidade
