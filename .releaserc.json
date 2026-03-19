@@ -28,19 +28,19 @@
         "preset": "conventionalcommits",
         "presetConfig": {
           "types": [
-            { "hidden": false, "section": "💥 Breaking Changes", "type": "breaking" },
-            { "hidden": false, "section": "📦 Build", "type": "build" },
-            { "hidden": false, "section": "🧹 Chore", "type": "chore" },
-            { "hidden": false, "section": "👷 CI/CD", "type": "ci" },
-            { "hidden": false, "section": "📚 Documentacao", "type": "docs" },
-            { "hidden": false, "section": "🚀 Nova Funcionalidade", "type": "feat" },
-            { "hidden": false, "section": "🐛 Bug Fix", "type": "fix" },
-            { "hidden": false, "section": "⚡ Performance", "type": "perf" },
-            { "hidden": false, "section": "✅ Qualidade", "type": "qa" },
-            { "hidden": false, "section": "🛠️ Refatoração", "type": "refactor" },
-            { "hidden": false, "section": "⏪ Reversão", "type": "revert" },
-            { "hidden": false, "section": "🎨 Estilo", "type": "style" },
-            { "hidden": false, "section": "🧪 Testes", "type": "test" }
+            { "hidden": false, "section": "Breaking Changes", "type": "breaking" },
+            { "hidden": false, "section": "Build", "type": "build" },
+            { "hidden": false, "section": "Chore", "type": "chore" },
+            { "hidden": false, "section": "CI/CD", "type": "ci" },
+            { "hidden": false, "section": "Documentacao", "type": "docs" },
+            { "hidden": false, "section": "Nova Funcionalidade", "type": "feat" },
+            { "hidden": false, "section": "Bug Fix", "type": "fix" },
+            { "hidden": false, "section": "Performance", "type": "perf" },
+            { "hidden": false, "section": "Qualidade", "type": "qa" },
+            { "hidden": false, "section": "Refatoracao", "type": "refactor" },
+            { "hidden": false, "section": "Reversao", "type": "revert" },
+            { "hidden": false, "section": "Estilo", "type": "style" },
+            { "hidden": false, "section": "Testes", "type": "test" }
           ]
         }
       }
