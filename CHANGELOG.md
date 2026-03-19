@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.2...v1.0.3) (2026-03-19)
+
+### Documentacao
+
+* **config:** adicionar badges e remover emojis de release e changelog ([1ab4b8f](https://github.com/victorh-silveira/go-wallet-core/commit/1ab4b8fa9a94fa99c4a598efc3c7dd7a618b5bb0))
+
 ## [1.0.2](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.1...v1.0.2) (2026-03-19)
 
 ### 🐛 Bug Fix
