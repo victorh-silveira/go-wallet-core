@@ -9,7 +9,7 @@ A estrutura de diretórios foi organizada dentro da pasta `src/` para separar as
 - **src/cmd/app**: Ponto de entrada da aplicação. Responsável por inicializar as dependências e subir o servidor.
 - **src/internal/domain**: O coração da aplicação. Contém as regras de negócio, entidades e interfaces (contratos) de repositórios.
 - **src/internal/usecase**: Camada de aplicação que orquestra a execução das regras de negócio usando as entidades do domínio.
-- **src/internal/infrastructure**: Implementações detalhadas como persistência no banco de dados (mocked), clientes de APIs externas, etc.
+- **src/internal/infrastructure**: Implementações detalhadas de infraestrutura. Neste projeto, a persistência atual e in-memory (sem banco externo).
 - **src/internal/interface**: Adaptadores de interface para expor a lógica interna (HTTP Handlers, gRPC, CLI).
 
 
@@ -25,11 +25,22 @@ Se você tiver o Go instalado:
 go run src/cmd/app/main.go
 ```
 
+Por padrao, a aplicacao inicia com uma conta seed:
+
+- `account_id`: `ACC-001`
+- `balance`: `500.0`
+
+Para iniciar sem seed:
+
+```bash
+SEED_DEFAULT_ACCOUNT=false go run src/cmd/app/main.go
+```
+
 ## Qualidade e Ciclo de Commits
 
 O fluxo de qualidade deste projeto e obrigatorio em todo o ciclo:
 
-- **Local (`pre-commit`)**: roda `clean-workspace` com `go run ./scripts/core/clean_workspace.go`.
+- **Local (`pre-commit`)**: roda `clean-workspace` com `go run ./scripts/core/clean_workspace.go` e `go test ./...`.
 - **Local (`commit-msg`)**: roda `commitlint` com Conventional Commits.
 - **CI**: valida novamente commitlint e executa qualidade/seguranca.
 - **Release**: `semantic-release` gera versao e atualiza `CHANGELOG.md`.
@@ -55,6 +66,20 @@ Regras importantes:
 - Emoji em mensagem de commit e **proibido**.
 - Emoji existe **somente** na geracao das secoes do `CHANGELOG.md`.
 - `type` e `scope` devem respeitar `commitlint.config.mjs`.
+
+## Testes
+
+Executar testes localmente:
+
+```bash
+go test ./...
+```
+
+Testes adicionados no projeto:
+
+- `src/internal/usecase/wallet/process_transaction_test.go`
+- `src/internal/infrastructure/repository/postgres/user_repository_test.go`
+- `src/internal/infrastructure/repository/postgres/wallet_repository_test.go`
 
 ## Release e Changelog
 
@@ -102,7 +127,7 @@ curl.exe -X POST "http://localhost:8080/wallet/transaction" \
 
 ## Próximos Passos
 
-1.  Configurar persistência real (PostgreSQL, MongoDB, etc.) no `internal/infrastructure`.
-2.  Adicionar logs e monitoramento.
-3.  Implementar mais casos de uso.
-4.  Adicionar Testes Unitários e de Integração.
+1.  Migrar valores monetarios de `float64` para centavos (`int64`) para evitar problemas de precisao.
+2.  Adicionar logs estruturados e middleware de observabilidade.
+3.  Expandir casos de uso e cobrir novos fluxos com testes.
+4.  Melhorar contrato de erros HTTP com padronizacao por tipo de erro.

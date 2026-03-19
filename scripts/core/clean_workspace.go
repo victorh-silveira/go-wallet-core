@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -20,7 +18,6 @@ func main() {
 	printHeader()
 
 	cleanCaches()
-	purifyComments()
 	runLinting()
 	runAudit()
 
@@ -81,106 +78,8 @@ func cleanCaches() {
 	}
 }
 
-func purifyComments() {
-	fmt.Println("\n[2/4] Purificando código: Removendo comentários (//)...")
-	count := 0
-
-	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || !strings.HasSuffix(path, ".go") {
-			return nil
-		}
-
-		if strings.Contains(path, ".git") || strings.Contains(path, "vendor") {
-			return nil
-		}
-
-		if processFile(path) {
-			count++
-		}
-		return nil
-	})
-
-	if err == nil {
-		fmt.Printf("      OK: %d arquivos Go purificados para produção.\n", count)
-	}
-}
-
-func processFile(path string) bool {
-
-	file, err := os.Open(filepath.Clean(path))
-	if err != nil {
-		return false
-	}
-	defer file.Close()
-
-	var output bytes.Buffer
-	reader := bufio.NewReader(file)
-
-	for {
-		line, err := reader.ReadString('\n')
-		if err != nil && err != io.EOF {
-			break
-		}
-
-		trimmed := strings.TrimSpace(line)
-		// Preservar diretivas do compilador e tags de auditoria (nosec, nolint, etc)
-		lowerTrimmed := strings.ToLower(trimmed)
-		isDirective := strings.HasPrefix(trimmed, "//go:") ||
-			strings.HasPrefix(trimmed, "// +build") ||
-			strings.Contains(lowerTrimmed, "nosec") ||
-			strings.Contains(lowerTrimmed, "nolint") ||
-			strings.Contains(lowerTrimmed, "noqa")
-
-		if isDirective {
-			output.WriteString(line)
-			if err == io.EOF {
-				break
-			}
-			continue
-		}
-
-		cleanLine := ""
-		inString := false
-		var stringChar rune
-
-		runes := []rune(line)
-		foundComment := false
-		for i := 0; i < len(runes); i++ {
-			r := runes[i]
-
-			if (r == '"' || r == '`' || r == '\'') && (i == 0 || runes[i-1] != '\\') {
-				if !inString {
-					inString = true
-					stringChar = r
-				} else if stringChar == r {
-					inString = false
-				}
-			}
-
-			if !inString && i+1 < len(runes) && runes[i] == '/' && runes[i+1] == '/' {
-				foundComment = true
-				break
-			}
-			cleanLine += string(r)
-		}
-
-		if foundComment || strings.TrimSpace(cleanLine) != "" || strings.TrimSpace(line) == "" {
-			output.WriteString(strings.TrimRight(cleanLine, "\r\n") + "\n")
-		}
-
-		if err == io.EOF {
-			break
-		}
-	}
-
-	_ = file.Close()
-
-	_ = os.WriteFile(filepath.Clean(path), output.Bytes(), 0600)
-	return true
-}
-
 func runLinting() {
-	fmt.Println("\n[3/4] Executando Automação de Estilo, Padrões e Qualidade (CI Sync)...")
+	fmt.Println("\n[2/3] Executando Automação de Estilo, Padrões e Qualidade (CI Sync)...")
 
 	tools := []struct {
 		name    string
@@ -225,7 +124,7 @@ func runLinting() {
 }
 
 func runAudit() {
-	fmt.Println("\n[4/4] Auditoria de Segurança e Vulnerabilidades (CI Sync)...")
+	fmt.Println("\n[3/3] Auditoria de Segurança e Vulnerabilidades (CI Sync)...")
 
 	tools := []struct {
 		name    string

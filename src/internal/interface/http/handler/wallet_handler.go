@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/victor-silveira/go-wallet-core/src/internal/usecase/wallet"
@@ -31,6 +32,14 @@ func (h *WalletHandler) Transaction(w http.ResponseWriter, r *http.Request) {
 
 	res, err := h.processTrxUseCase.Execute(r.Context(), req)
 	if err != nil {
+		if errors.Is(err, wallet.ErrInvalidTransactionType) {
+			RespondWithError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		if errors.Is(err, wallet.ErrAccountNotFound) {
+			RespondWithError(w, http.StatusNotFound, err.Error())
+			return
+		}
 		RespondWithError(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}

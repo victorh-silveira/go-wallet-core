@@ -24,7 +24,11 @@ func NewWalletRepository() *WalletRepository {
 func (r *WalletRepository) SaveAccount(ctx context.Context, account *entity.Account) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	r.accounts[account.ID] = account
+	if account == nil {
+		return errors.New("account is required")
+	}
+	accountCopy := *account
+	r.accounts[account.ID] = &accountCopy
 	return nil
 }
 
@@ -35,7 +39,8 @@ func (r *WalletRepository) GetByID(ctx context.Context, id string) (*entity.Acco
 	if !ok {
 		return nil, errors.New("account not found")
 	}
-	return acc, nil
+	accountCopy := *acc
+	return &accountCopy, nil
 }
 
 func (r *WalletRepository) GetByUserID(ctx context.Context, userID string) (*entity.Account, error) {
@@ -43,7 +48,8 @@ func (r *WalletRepository) GetByUserID(ctx context.Context, userID string) (*ent
 	defer r.mu.RUnlock()
 	for _, acc := range r.accounts {
 		if acc.UserID == userID {
-			return acc, nil
+			accountCopy := *acc
+			return &accountCopy, nil
 		}
 	}
 	return nil, errors.New("account not found for user")
@@ -67,7 +73,11 @@ func (r *WalletRepository) UpdateBalance(ctx context.Context, accountID string, 
 func (r *WalletRepository) SaveTransaction(ctx context.Context, trx *entity.Transaction) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	r.transactions[trx.AccountID] = append(r.transactions[trx.AccountID], trx)
+	if trx == nil {
+		return errors.New("transaction is required")
+	}
+	trxCopy := *trx
+	r.transactions[trx.AccountID] = append(r.transactions[trx.AccountID], &trxCopy)
 	return nil
 }
 
@@ -78,5 +88,10 @@ func (r *WalletRepository) FindAllByAccountID(ctx context.Context, accountID str
 	if !ok {
 		return []*entity.Transaction{}, nil
 	}
-	return trxs, nil
+	result := make([]*entity.Transaction, 0, len(trxs))
+	for _, trx := range trxs {
+		trxCopy := *trx
+		result = append(result, &trxCopy)
+	}
+	return result, nil
 }

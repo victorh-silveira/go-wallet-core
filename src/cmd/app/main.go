@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
@@ -29,10 +30,20 @@ func main() {
 	walletHandler := handler.NewWalletHandler(processTrxUseCase)
 	healthHandler := handler.NewHealthHandler(AppVersion)
 
-	ctx := context.Background()
-	initialAcc, _ := entity.NewAccount("ACC-001", "USER-001")
-	_ = initialAcc.UpdateBalance(500.0)
-	_ = walletRepo.SaveAccount(ctx, initialAcc)
+	if os.Getenv("SEED_DEFAULT_ACCOUNT") != "false" {
+		ctx := context.Background()
+		initialAcc, err := entity.NewAccount("ACC-001", "USER-001")
+		if err != nil {
+			log.Fatalf("failed to seed default account: %v", err)
+		}
+		if err := initialAcc.UpdateBalance(500.0); err != nil {
+			log.Fatalf("failed to set seed account balance: %v", err)
+		}
+		if err := walletRepo.SaveAccount(ctx, initialAcc); err != nil {
+			log.Fatalf("failed to persist seed account: %v", err)
+		}
+		fmt.Println("[TESTE] Conta default carregada: ACC-001 | Saldo: R$ 500,00")
+	}
 
 	http.HandleFunc("/users", userHandler.CreateUser)
 	http.HandleFunc("/wallet/transaction", walletHandler.Transaction)
@@ -54,7 +65,6 @@ func main() {
 	}
 
 	fmt.Println("Server listening on :8080")
-	fmt.Println("[TESTE] Conta default carregada: ACC-001 | Saldo: R$ 500,00")
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed to start: %v", err)
 	}

@@ -2,7 +2,9 @@ package wallet
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
@@ -25,6 +27,11 @@ type ProcessTransactionUseCase struct {
 	transactionRepo repository.TransactionRepository
 }
 
+var (
+	ErrInvalidTransactionType = errors.New("invalid transaction type")
+	ErrAccountNotFound        = errors.New("account not found")
+)
+
 func NewProcessTransactionUseCase(accountRepo repository.AccountRepository, transactionRepo repository.TransactionRepository) *ProcessTransactionUseCase {
 	return &ProcessTransactionUseCase{
 		accountRepo:     accountRepo,
@@ -33,19 +40,26 @@ func NewProcessTransactionUseCase(accountRepo repository.AccountRepository, tran
 }
 
 func (u *ProcessTransactionUseCase) Execute(ctx context.Context, request ProcessTransactionRequest) (ProcessTransactionResponse, error) {
+	if request.AccountID == "" {
+		return ProcessTransactionResponse{}, ErrAccountNotFound
+	}
+
 	acc, err := u.accountRepo.GetByID(ctx, request.AccountID)
 	if err != nil {
-		return ProcessTransactionResponse{}, err
+		return ProcessTransactionResponse{}, ErrAccountNotFound
 	}
 
 	var tType entity.TransactionType
 	signedAmount := request.Amount
+	requestType := strings.ToUpper(strings.TrimSpace(request.Type))
 
-	if request.Type == "DEBIT" {
+	if requestType == string(entity.Debit) {
 		tType = entity.Debit
 		signedAmount = -request.Amount
-	} else {
+	} else if requestType == string(entity.Credit) {
 		tType = entity.Credit
+	} else {
+		return ProcessTransactionResponse{}, ErrInvalidTransactionType
 	}
 
 	if err := acc.UpdateBalance(signedAmount); err != nil {
@@ -57,8 +71,13 @@ func (u *ProcessTransactionUseCase) Execute(ctx context.Context, request Process
 	}
 
 	id := fmt.Sprintf("TRX-%d", time.Now().UnixNano())
-	trx, _ := entity.NewTransaction(id, acc.ID, request.Description, tType, request.Amount)
-	_ = u.transactionRepo.SaveTransaction(ctx, trx)
+	trx, err := entity.NewTransaction(id, acc.ID, request.Description, tType, request.Amount)
+	if err != nil {
+		return ProcessTransactionResponse{}, err
+	}
+	if err := u.transactionRepo.SaveTransaction(ctx, trx); err != nil {
+		return ProcessTransactionResponse{}, err
+	}
 
 	return ProcessTransactionResponse{
 		NewBalance: acc.Balance,

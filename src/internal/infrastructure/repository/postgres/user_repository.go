@@ -9,7 +9,7 @@ import (
 )
 
 type UserRepository struct {
-	mu    sync.Mutex
+	mu    sync.RWMutex
 	users map[string]*entity.User
 }
 
@@ -22,16 +22,21 @@ func NewUserRepository() *UserRepository {
 func (r *UserRepository) Save(ctx context.Context, user *entity.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	r.users[user.ID] = user
+	if user == nil {
+		return errors.New("user is required")
+	}
+	userCopy := *user
+	r.users[user.ID] = &userCopy
 	return nil
 }
 
 func (r *UserRepository) GetByID(ctx context.Context, id string) (*entity.User, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	user, ok := r.users[id]
 	if !ok {
 		return nil, errors.New("user not found")
 	}
-	return user, nil
+	userCopy := *user
+	return &userCopy, nil
 }
