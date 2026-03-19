@@ -1,0 +1,17 @@
+minimum_pre_commit_version: "3.5.0"
+
+repos:
+  - repo: local
+    hooks:
+      - id: clean-workspace
+        name: clean-workspace (fmt + vet + tidy + lint + security)
+        entry: go run ./scripts/core/clean_workspace.go
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+
+      - id: commitlint
+        name: commitlint (conventional commits)
+        entry: npx --yes -p @commitlint/cli -p @commitlint/config-conventional commitlint --config commitlint.config.mjs --edit
+        language: system
+        stages: [commit-msg]

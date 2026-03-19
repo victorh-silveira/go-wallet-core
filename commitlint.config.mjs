@@ -12,6 +12,7 @@ export default {
         "feat",     // Nova funcionalidade
         "fix",      // Correção de erro
         "perf",     // Performance
+        "qa",       // Auditoria de Qualidade
         "refactor", // Refatoração
         "revert",   // Reversão
         "style",    // Estilo/Formatação
@@ -23,19 +24,20 @@ export default {
       "always",
       [
         "api",      // Comunicação Deriv
+        "build",    // Build e empacotamento
         "clean",    // Limpeza de workspace
+        "cli",      // Entrypoints/linha de comando
         "config",   // Configurações
-        "engine",   // Motor de execução
-        "infra",    // Infraestrutura/Git
-        "models",   // IA e modelos
-        "risk",     // Gestão de risco
-        "state",    // Estado/Persistência
-        "strategy", // Estratégia e indicadores
-        "sync",     // Sincronia de dados
-        "terminal", // Interface/Logs
+        "deps",     // Dependências
         "domain",   // Core Domain/Business
-        "logic",    // Trading Logic
-        "physics",  // Physics Engines
+        "docs",     // Artefatos de documentação
+        "infra",    // Infraestrutura
+        "release",  // Versionamento/release
+        "repo",     // Repositório de dados
+        "security", // Segurança
+        "tests",    // Testes
+        "usecase",  // Casos de uso
+        "wallet",   // Funcionalidades de carteira
       ],
     ],
     "scope-empty": [0],

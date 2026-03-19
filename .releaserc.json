@@ -6,17 +6,19 @@
       {
         "preset": "conventionalcommits",
         "releaseRules": [
-          { "type": "feat", "release": "minor" },
-          { "type": "fix", "release": "patch" },
-          { "type": "perf", "release": "patch" },
-          { "type": "refactor", "release": "patch" },
-          { "type": "style", "release": "patch" },
-          { "type": "docs", "release": "patch" },
-          { "type": "build", "release": "patch" },
-          { "type": "ci", "release": "patch" },
-          { "type": "revert", "release": "patch" },
-          { "type": "test", "release": "patch" },
-          { "type": "chore", "release": "patch" }
+          { "release": "major", "breaking": true },
+          { "release": "patch", "type": "build" },
+          { "release": "patch", "type": "chore" },
+          { "release": "patch", "type": "ci" },
+          { "release": "patch", "type": "docs" },
+          { "release": "minor", "type": "feat" },
+          { "release": "patch", "type": "fix" },
+          { "release": "patch", "type": "perf" },
+          { "release": "patch", "type": "qa" },
+          { "release": "patch", "type": "refactor" },
+          { "release": "patch", "type": "revert" },
+          { "release": "patch", "type": "style" },
+          { "release": "patch", "type": "test" }
         ]
       }
     ],
@@ -26,18 +28,19 @@
         "preset": "conventionalcommits",
         "presetConfig": {
           "types": [
-            { "type": "feat", "section": "🚀 Nova Funcionalidade", "hidden": false },
-            { "type": "fix", "section": "🐛 Correções de Erros", "hidden": false },
-            { "type": "perf", "section": "⚡ Melhorias de Performance", "hidden": false },
-            { "type": "refactor", "section": "🛠️ Refatorações de Código", "hidden": false },
-            { "type": "docs", "section": "📖 Documentação", "hidden": false },
-            { "type": "style", "section": "💅 Estilo e Formatação", "hidden": false },
-            { "type": "test", "section": "🧪 Testes e Qualidade", "hidden": false },
-            { "type": "build", "section": "📦 Build e Dependências", "hidden": false },
-            { "type": "ci", "section": "👷 Integração Contínua (CI/CD)", "hidden": false },
-            { "type": "revert", "section": "⏪ Reversões", "hidden": false },
-            { "type": "chore", "section": "🧹 Manutenção e Configurações", "hidden": false },
-            { "type": "breaking", "section": "💥 MUDANÇAS QUEBRANTES (BREAKING)", "hidden": false }
+            { "hidden": false, "section": "💥 Breaking Changes", "type": "breaking" },
+            { "hidden": false, "section": "📦 Build", "type": "build" },
+            { "hidden": false, "section": "🧹 Chore", "type": "chore" },
+            { "hidden": false, "section": "👷 CI/CD", "type": "ci" },
+            { "hidden": false, "section": "📚 Documentacao", "type": "docs" },
+            { "hidden": false, "section": "🚀 Nova Funcionalidade", "type": "feat" },
+            { "hidden": false, "section": "🐛 Bug Fix", "type": "fix" },
+            { "hidden": false, "section": "⚡ Performance", "type": "perf" },
+            { "hidden": false, "section": "✅ Qualidade", "type": "qa" },
+            { "hidden": false, "section": "🛠️ Refatoração", "type": "refactor" },
+            { "hidden": false, "section": "⏪ Reversão", "type": "revert" },
+            { "hidden": false, "section": "🎨 Estilo", "type": "style" },
+            { "hidden": false, "section": "🧪 Testes", "type": "test" }
           ]
         }
       }
@@ -49,15 +52,9 @@
       }
     ],
     [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": "go mod tidy"
-      }
-    ],
-    [
       "@semantic-release/git",
       {
-        "assets": ["go.mod", "go.sum", "CHANGELOG.md"],
+        "assets": ["CHANGELOG.md"],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],

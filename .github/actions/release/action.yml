@@ -11,25 +11,13 @@ runs:
     - name: "Configurar Go"
       uses: actions/setup-go@v5
       with:
-        go-version: '1.21'
+        go-version: '1.26'
         cache: true
 
     - name: "Configurar Node.js"
       uses: actions/setup-node@v4
       with:
-        node-version: '24'
-
-    - name: "Instalar Dependências do Semantic Release"
-      shell: bash
-      run: |
-        npm install -g semantic-release \
-          @semantic-release/commit-analyzer \
-          @semantic-release/release-notes-generator \
-          @semantic-release/changelog \
-          @semantic-release/git \
-          @semantic-release/exec \
-          @semantic-release/github \
-          conventional-changelog-conventionalcommits
+        node-version: '22'
 
     - name: "Executar Semantic Release"
       shell: bash
@@ -38,6 +26,13 @@ runs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Executa o release original
-        npx semantic-release
+
+        npx --yes \
+          -p semantic-release \
+          -p @semantic-release/commit-analyzer \
+          -p @semantic-release/release-notes-generator \
+          -p @semantic-release/changelog \
+          -p @semantic-release/git \
+          -p @semantic-release/github \
+          -p conventional-changelog-conventionalcommits \
+          semantic-release

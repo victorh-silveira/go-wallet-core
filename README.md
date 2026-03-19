@@ -25,6 +25,44 @@ Se você tiver o Go instalado:
 go run src/cmd/app/main.go
 ```
 
+## Qualidade e Ciclo de Commits
+
+O fluxo de qualidade deste projeto e obrigatorio em todo o ciclo:
+
+- **Local (`pre-commit`)**: roda `clean-workspace` com `go run ./scripts/core/clean_workspace.go`.
+- **Local (`commit-msg`)**: roda `commitlint` com Conventional Commits.
+- **CI**: valida novamente commitlint e executa qualidade/seguranca.
+- **Release**: `semantic-release` gera versao e atualiza `CHANGELOG.md`.
+
+### Padrao de commit
+
+Use o formato:
+
+```text
+type(scope): descricao curta
+```
+
+Exemplos validos:
+
+```text
+feat(wallet): adicionar processamento de transacao
+fix(api): corrigir serializacao de erro
+chore(config): ajustar pipeline de release
+```
+
+Regras importantes:
+
+- Emoji em mensagem de commit e **proibido**.
+- Emoji existe **somente** na geracao das secoes do `CHANGELOG.md`.
+- `type` e `scope` devem respeitar `commitlint.config.mjs`.
+
+## Release e Changelog
+
+- A liberacao e automatica na branch `main` via `semantic-release`.
+- O changelog oficial e versionado no arquivo `CHANGELOG.md`.
+- O commit automatico de release segue o formato sem emoji:
+  - `chore(release): <versao> [skip ci]`
+
 ## 📖 Documentação da API
 
 A API segue padrões REST e possui documentação técnica disponível na pasta `api/`. 
