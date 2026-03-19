@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.3...v1.0.4) (2026-03-19)
+
+### Documentacao
+
+* **config:** remover emojis dos artefatos de ci cd ([8ed5201](https://github.com/victorh-silveira/go-wallet-core/commit/8ed5201db962ca6ed68b624c0c1a1a79ea867573))
+* **docs:** adicionar badge de lint no README ([fe80b2e](https://github.com/victorh-silveira/go-wallet-core/commit/fe80b2efff29f1062a766451ce1895eaf90c45a6))
+* **docs:** remover mencoes a emoji e limpar changelog ([0bcf360](https://github.com/victorh-silveira/go-wallet-core/commit/0bcf360d92fdcec78f22a28a28a0234b53f295e9))
+
 ## [1.0.3](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.2...v1.0.3) (2026-03-19)
 
 ### Documentacao
