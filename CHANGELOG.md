@@ -1,3 +1,9 @@
+## [1.0.6](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.5...v1.0.6) (2026-03-21)
+
+### Chore
+
+* **repo:** remover comentarios e ajustar gosec e documentacao ([862f6fe](https://github.com/victorh-silveira/go-wallet-core/commit/862f6fef0c8e51ada6dd50a48cf7a6d0e3c7cbe7))
+
 ## [1.0.5](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.4...v1.0.5) (2026-03-21)
 
 ### CI/CD
