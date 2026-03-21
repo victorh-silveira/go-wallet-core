@@ -1,4 +1,4 @@
-package postgres
+package memory
 
 import (
 	"context"
@@ -55,7 +55,7 @@ func (r *WalletRepository) GetByUserID(ctx context.Context, userID string) (*ent
 	return nil, errors.New("account not found for user")
 }
 
-func (r *WalletRepository) UpdateBalance(ctx context.Context, accountID string, amount float64) error {
+func (r *WalletRepository) UpdateBalance(ctx context.Context, accountID string, deltaCentavos int64) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	acc, ok := r.accounts[accountID]
@@ -63,10 +63,10 @@ func (r *WalletRepository) UpdateBalance(ctx context.Context, accountID string, 
 		return errors.New("account not found")
 	}
 
-	if acc.Balance+amount < 0 {
-		return errors.New("insufficient balance")
+	if acc.Balance+deltaCentavos < 0 {
+		return entity.ErrInsufficientBalance
 	}
-	acc.Balance += amount
+	acc.Balance += deltaCentavos
 	return nil
 }
 

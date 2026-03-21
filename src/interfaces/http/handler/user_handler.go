@@ -2,9 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 
 	"github.com/victor-silveira/go-wallet-core/src/application/user"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
 )
 
 type UserHandler struct {
@@ -23,19 +26,26 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Body == nil || r.ContentLength == 0 {
-		RespondWithError(w, http.StatusBadRequest, "Corpo da requisição está vazio")
-		return
-	}
-
 	var req user.CreateUserRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&req); err != nil {
+		if errors.Is(err, io.EOF) {
+			RespondWithError(w, http.StatusBadRequest, "Corpo da requisição está vazio")
+			return
+		}
 		RespondWithError(w, http.StatusBadRequest, "Formato JSON inválido")
 		return
 	}
 
 	res, err := h.createUserUseCase.Execute(r.Context(), req)
 	if err != nil {
+		if errors.Is(err, entity.ErrUserIDRequired) ||
+			errors.Is(err, entity.ErrUserNameRequired) ||
+			errors.Is(err, entity.ErrUserEmailRequired) {
+			RespondWithError(w, http.StatusBadRequest, err.Error())
+			return
+		}
 		RespondWithError(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}

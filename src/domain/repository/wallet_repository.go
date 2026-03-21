@@ -10,7 +10,7 @@ type AccountRepository interface {
 	SaveAccount(ctx context.Context, account *entity.Account) error
 	GetByID(ctx context.Context, id string) (*entity.Account, error)
 	GetByUserID(ctx context.Context, userID string) (*entity.Account, error)
-	UpdateBalance(ctx context.Context, accountID string, amount float64) error
+	UpdateBalance(ctx context.Context, accountID string, deltaCentavos int64) error
 }
 
 type TransactionRepository interface {

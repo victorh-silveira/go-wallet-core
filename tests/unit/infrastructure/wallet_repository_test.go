@@ -6,15 +6,15 @@ import (
 	"time"
 
 	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
-	"github.com/victor-silveira/go-wallet-core/src/infrastructure/repository/postgres"
+	"github.com/victor-silveira/go-wallet-core/src/infrastructure/repository/memory"
 )
 
 func TestWalletRepositoryReturnsAccountCopy(t *testing.T) {
-	repo := postgres.NewWalletRepository()
+	repo := memory.NewWalletRepository()
 	account := &entity.Account{
 		ID:        "ACC-001",
 		UserID:    "USER-001",
-		Balance:   50,
+		Balance:   5000,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -35,7 +35,7 @@ func TestWalletRepositoryReturnsAccountCopy(t *testing.T) {
 		t.Fatalf("reload account failed: %v", err)
 	}
 
-	if reloaded.Balance != 50 {
-		t.Fatalf("repository should be immutable outside, expected 50 got %v", reloaded.Balance)
+	if reloaded.Balance != 5000 {
+		t.Fatalf("repository should be immutable outside, expected 5000 got %v", reloaded.Balance)
 	}
 }

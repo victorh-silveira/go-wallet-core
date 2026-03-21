@@ -8,15 +8,15 @@ import (
 )
 
 type CreateUserRequest struct {
-	ID    string
-	Name  string
-	Email string
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 type CreateUserResponse struct {
-	ID    string
-	Name  string
-	Email string
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 type CreateUserUseCase struct {

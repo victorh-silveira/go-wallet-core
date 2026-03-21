@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/victor-silveira/go-wallet-core/src/application/wallet"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
 )
 
 type WalletHandler struct {
@@ -25,22 +26,27 @@ func (h *WalletHandler) Transaction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req wallet.ProcessTransactionRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	if err := dec.Decode(&req); err != nil {
 		RespondWithError(w, http.StatusBadRequest, "Corpo da requisição inválido")
 		return
 	}
 
 	res, err := h.processTrxUseCase.Execute(r.Context(), req)
 	if err != nil {
-		if errors.Is(err, wallet.ErrInvalidTransactionType) {
+		switch {
+		case errors.Is(err, wallet.ErrInvalidTransactionType):
 			RespondWithError(w, http.StatusBadRequest, err.Error())
-			return
-		}
-		if errors.Is(err, wallet.ErrAccountNotFound) {
+		case errors.Is(err, wallet.ErrAccountNotFound):
 			RespondWithError(w, http.StatusNotFound, err.Error())
-			return
+		case errors.Is(err, entity.ErrInvalidAmount):
+			RespondWithError(w, http.StatusBadRequest, err.Error())
+		case errors.Is(err, entity.ErrInsufficientBalance):
+			RespondWithError(w, http.StatusUnprocessableEntity, err.Error())
+		default:
+			RespondWithError(w, http.StatusUnprocessableEntity, err.Error())
 		}
-		RespondWithError(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 

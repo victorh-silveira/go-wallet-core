@@ -30,7 +30,7 @@ func (s *accountRepoStub) GetByUserID(ctx context.Context, userID string) (*enti
 	return nil, errors.New("not implemented")
 }
 
-func (s *accountRepoStub) UpdateBalance(ctx context.Context, accountID string, amount float64) error {
+func (s *accountRepoStub) UpdateBalance(ctx context.Context, accountID string, deltaCentavos int64) error {
 	return errors.New("not implemented")
 }
 
@@ -48,7 +48,7 @@ func (s *txRepoStub) FindAllByAccountID(ctx context.Context, accountID string) (
 
 func TestProcessTransactionRejectsInvalidType(t *testing.T) {
 	acc, _ := entity.NewAccount("ACC-001", "USER-001")
-	_ = acc.UpdateBalance(100)
+	_ = acc.UpdateBalance(10_000)
 
 	useCase := appwallet.NewProcessTransactionUseCase(
 		&accountRepoStub{account: acc},

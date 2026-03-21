@@ -2,6 +2,12 @@ package entity
 
 import "errors"
 
+var (
+	ErrUserIDRequired    = errors.New("id is required")
+	ErrUserNameRequired  = errors.New("name is required")
+	ErrUserEmailRequired = errors.New("email is required")
+)
+
 type User struct {
 	ID    string
 	Name  string
@@ -9,11 +15,14 @@ type User struct {
 }
 
 func NewUser(id, name, email string) (*User, error) {
+	if id == "" {
+		return nil, ErrUserIDRequired
+	}
 	if name == "" {
-		return nil, errors.New("name is required")
+		return nil, ErrUserNameRequired
 	}
 	if email == "" {
-		return nil, errors.New("email is required")
+		return nil, ErrUserEmailRequired
 	}
 	return &User{
 		ID:    id,

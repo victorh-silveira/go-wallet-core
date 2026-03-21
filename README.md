@@ -4,30 +4,33 @@
 [![Lint](https://img.shields.io/badge/Lint-golangci--lint-00C7B7?logo=go&logoColor=white)](.github/actions/lint/action.yml)
 [![Tests](https://img.shields.io/badge/Tests-go%20test-0F9D58?logo=go&logoColor=white)](#testes)
 [![Pre-commit](https://img.shields.io/badge/Hooks-pre--commit-FAB040?logo=pre-commit&logoColor=white)](.pre-commit-config.yaml)
-[![CI](https://github.com/victorh-silveira/go-wallet-core/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/victorh-silveira/go-wallet-core/actions/workflows/ci.yml)
+[![CI](https://github.com/victor-h-silveira/go-wallet-core/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/victor-h-silveira/go-wallet-core/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/badge/Release-semantic--release-494949?logo=semantic-release&logoColor=white)](tools/releaserc.json)
 [![API](https://img.shields.io/badge/API-REST-0A1E3F?logo=fastapi&logoColor=white)](api/swagger.yaml)
 [![OpenAPI](https://img.shields.io/badge/Spec-OpenAPI-6BA539?logo=swagger&logoColor=white)](api/swagger.yaml)
 
-Este projeto segue os princípios de **Domain-Driven Design (DDD)** e **Clean Architecture** para garantir uma base de código modular, testável e manutenível.
+Este projeto segue os principios de **Domain-Driven Design (DDD)** e **Clean Architecture** para garantir uma base de codigo modular, testavel e manutenivel.
 
 **Arquitetura do Projeto**
 
-A estrutura de diretórios foi organizada dentro da pasta `src/` para separar as responsabilidades em camadas:
+A estrutura de diretorios foi organizada dentro da pasta `src/` para separar as responsabilidades em camadas:
 
-- **src/main.go**: Ponto de entrada da aplicação.
-- **src/domain**: Entidades e contratos de repositório.
-- **src/application**: Casos de uso da aplicação.
-- **src/infrastructure**: Implementações concretas (repositório in-memory).
-- **src/interfaces**: Handlers HTTP e serialização de respostas.
+- **src/main.go**: Ponto de entrada, logs estruturados (`log/slog`), `http.ServeMux` com rotas por metodo (Go 1.22+), encerramento gracioso (`Shutdown` + SIGINT/SIGTERM).
+- **src/domain**: Entidades, erros de dominio e contratos de repositorio.
+- **src/application**: Casos de uso da aplicacao.
+- **src/infrastructure**: Implementacoes concretas (repositorio **em memoria** em `repository/memory`).
+- **src/interfaces**: Handlers HTTP e serializacao de respostas.
 
+**Valores monetarios**
+
+Todos os valores sao **centavos** (`int64` na API JSON). Ex.: R$ 500,00 = `50000`. Ver [docs/money.md](docs/money.md).
 
 **Como Executar**
 
-Se você tiver o Go instalado:
+Se voce tiver o Go instalado:
 
-1.  Aponte para o diretório raiz do projeto.
-2.  Assure-se de que o `go.mod` está configurado corretamente.
+1.  Aponte para o diretorio raiz do projeto.
+2.  Assure-se de que o `go.mod` esta configurado corretamente.
 3.  Execute o comando:
 
 ```bash
@@ -37,7 +40,9 @@ go run src/main.go
 Por padrao, a aplicacao inicia com uma conta seed:
 
 - `account_id`: `ACC-001`
-- `balance`: `500.0`
+- `balance`: `50000` centavos (R$ 500,00)
+
+Os logs sao emitidos em **JSON** no stdout (nivel `INFO`). Para encerrar com seguranca, use **Ctrl+C** (SIGINT) ou envie o processo para um orquestrador que envie SIGTERM; o servidor conclui requisicoes ativas ate o timeout de shutdown.
 
 Para iniciar sem seed:
 
@@ -97,25 +102,26 @@ Testes adicionados no projeto:
 - O commit automatico de release segue o formato:
   - `chore(release): <versao> [skip ci]`
 
-**Documentação da API**
+**Documentacao da API**
 
-A API segue padrões REST e possui documentação técnica disponível na pasta `api/`. 
+A API segue padroes REST e possui documentacao tecnica disponivel na pasta `api/`. 
 
 - [OpenAPI (Swagger)](api/swagger.yaml)
 - [REST Client (VSCode)](api/requests.http)
+- [Centavos e contrato monetario](docs/money.md)
 
-**Endpoints Disponíveis**
+**Endpoints Disponiveis**
 
 **1. Health Check**
 `GET /health`
-Verifica se o servidor está online.
+Verifica se o servidor esta online.
 ```bash
 curl.exe -X GET "http://localhost:8080/health"
 ```
 
-**2. Criar Usuário**
+**2. Criar Usuario**
 `POST /users`
-Cria um novo usuário no sistema.
+Cria um novo usuario no sistema.
 - **Body**: `{ "id": string, "name": string, "email": string }`
 ```bash
 curl.exe -X POST "http://localhost:8080/users" \
@@ -123,19 +129,19 @@ curl.exe -X POST "http://localhost:8080/users" \
   -d '{ \"id\": \"USER-001\", \"name\": \"Victor\", \"email\": \"victor@teste.com\" }'
 ```
 
-**3. Processar Transação (Ledger)**
+**3. Processar Transacao (Ledger)**
 `POST /wallet/transaction`
-Registra movimentos de entrada (CREDIT) ou saída (DEBIT) na carteira.
-- **Body**: `{ "account_id": string, "type": "DEBIT"|"CREDIT", "amount": float, "description": string }`
+Registra movimentos de entrada (CREDIT) ou saida (DEBIT) na carteira.
+- **Body**: `{ "account_id": string, "type": "DEBIT"|"CREDIT", "amount": int (centavos), "description": string }`
 ```bash
 curl.exe -X POST "http://localhost:8080/wallet/transaction" \
   -H "Content-Type: application/json" \
-  -d '{ \"account_id\": \"ACC-001\", \"type\": \"CREDIT\", \"amount\": 250.50, \"description\": \"Recebimento PIX\" }'
+  -d '{ \"account_id\": \"ACC-001\", \"type\": \"CREDIT\", \"amount\": 25050, \"description\": \"Recebimento PIX\" }'
 ```
 
-**Próximos Passos**
+**Proximos Passos**
 
-1.  Migrar valores monetarios de `float64` para centavos (`int64`) para evitar problemas de precisao.
-2.  Adicionar logs estruturados e middleware de observabilidade.
-3.  Expandir casos de uso e cobrir novos fluxos com testes.
-4.  Melhorar contrato de erros HTTP com padronizacao por tipo de erro.
+1.  Persistencia real (PostgreSQL ou outro) mantendo `repository` interfaces.
+2.  Middleware de observabilidade (metricas, tracing).
+3.  Contrato de erros HTTP padronizado (codigos de erro de dominio).
+4.  Testes de integracao e contrato.

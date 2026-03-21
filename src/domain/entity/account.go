@@ -8,7 +8,7 @@ import (
 type Account struct {
 	ID        string    `json:"id"`
 	UserID    string    `json:"user_id"`
-	Balance   float64   `json:"balance"`
+	Balance   int64     `json:"balance"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -30,10 +30,10 @@ func NewAccount(id, userID string) (*Account, error) {
 	}, nil
 }
 
-func (a *Account) UpdateBalance(amount float64) error {
-	newBalance := a.Balance + amount
+func (a *Account) UpdateBalance(deltaCentavos int64) error {
+	newBalance := a.Balance + deltaCentavos
 	if newBalance < 0 {
-		return errors.New("insufficient balance")
+		return ErrInsufficientBalance
 	}
 	a.Balance = newBalance
 	a.UpdatedAt = time.Now()

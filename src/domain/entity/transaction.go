@@ -16,23 +16,23 @@ type Transaction struct {
 	ID          string          `json:"id"`
 	AccountID   string          `json:"account_id"`
 	Type        TransactionType `json:"type"`
-	Amount      float64         `json:"amount"`
+	Amount      int64           `json:"amount"`
 	Description string          `json:"description"`
 	CreatedAt   time.Time       `json:"created_at"`
 }
 
-func NewTransaction(id, accountID, description string, tType TransactionType, amount float64) (*Transaction, error) {
+func NewTransaction(id, accountID, description string, tType TransactionType, amountCentavos int64) (*Transaction, error) {
 	if id == "" || accountID == "" {
 		return nil, errors.New("transaction and account ids are required")
 	}
-	if amount <= 0 {
-		return nil, errors.New("amount must be positive")
+	if amountCentavos <= 0 {
+		return nil, ErrInvalidAmount
 	}
 	return &Transaction{
 		ID:          id,
 		AccountID:   accountID,
 		Type:        tType,
-		Amount:      amount,
+		Amount:      amountCentavos,
 		Description: description,
 		CreatedAt:   time.Now(),
 	}, nil

@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
-	"github.com/victor-silveira/go-wallet-core/src/infrastructure/repository/postgres"
+	"github.com/victor-silveira/go-wallet-core/src/infrastructure/repository/memory"
 )
 
 func TestUserRepositoryReturnsUserCopy(t *testing.T) {
-	repo := postgres.NewUserRepository()
+	repo := memory.NewUserRepository()
 	user := &entity.User{
 		ID:    "USER-001",
 		Name:  "Victor",

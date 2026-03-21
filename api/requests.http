@@ -27,8 +27,8 @@ Content-Type: application/json
 {
     "account_id": "ACC-001",
     "type": "CREDIT",
-    "amount": 250.50,
-    "description": "Depósito Mensal via PIX"
+    "amount": 25050,
+    "description": "Depósito Mensal via PIX (R$ 250,50)"
 }
 
 ---
@@ -40,8 +40,8 @@ Content-Type: application/json
 {
     "account_id": "ACC-001",
     "type": "DEBIT",
-    "amount": 100.00,
-    "description": "Pagamento de Academia"
+    "amount": 10000,
+    "description": "Pagamento de Academia (R$ 100,00)"
 }
 
 ---
@@ -53,6 +53,6 @@ Content-Type: application/json
 {
     "account_id": "ACC-001",
     "type": "DEBIT",
-    "amount": 10000.00,
-    "description": "Tentativa Frustrada"
+    "amount": 100000000,
+    "description": "Tentativa Frustrada (valor acima do saldo)"
 }

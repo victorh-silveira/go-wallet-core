@@ -1,7 +1,9 @@
 openapi: 3.0.3
 info:
   title: Go Wallet Core API
-  description: API de Microserviço de Carteira Digital (Wallet & Ledger) com suporte a transações imutáveis.
+  description: |
+    API de carteira digital (wallet e ledger).
+    Valores monetarios sao sempre em **centavos** (inteiro): 1 real = 100 centavos (ex.: R$ 250,50 = 25050).
   version: 1.0.0
 servers:
   - url: http://localhost:8080
@@ -11,7 +13,7 @@ paths:
   /health:
     get:
       summary: Health Check
-      description: Verifica o status de saúde da aplicação.
+      description: Verifica o status de saude da aplicacao.
       responses:
         '200':
           description: Sistema operacional
@@ -32,8 +34,8 @@ paths:
 
   /users:
     post:
-      summary: Criar Usuário
-      description: Registra um novo usuário no sistema.
+      summary: Criar Usuario
+      description: Registra um novo usuario no sistema.
       requestBody:
         required: true
         content:
@@ -56,16 +58,18 @@ paths:
                   example: "victor@teste.com"
       responses:
         '201':
-          description: Usuário criado com sucesso
+          description: Usuario criado com sucesso
         '400':
-          description: Requisição inválida
+          description: Requisicao invalida
         '422':
-          description: Erro de validação de negócio
+          description: Erro de validacao de negocio
 
   /wallet/transaction:
     post:
-      summary: Processar Transação
-      description: Registra um débito ou crédito em uma carteira específica.
+      summary: Processar Transacao
+      description: |
+        Registra debito ou credito. O campo `amount` e o saldo retornado `new_balance`
+        estao em **centavos** (inteiro).
       requestBody:
         required: true
         content:
@@ -86,22 +90,29 @@ paths:
                   enum: [DEBIT, CREDIT]
                   example: "CREDIT"
                 amount:
-                  type: number
-                  format: float
-                  example: 250.50
+                  type: integer
+                  format: int64
+                  description: Valor em centavos (sempre positivo)
+                  example: 25050
                 description:
                   type: string
                   example: "Pagamento de Aluguel"
       responses:
         '200':
-          description: Transação processada com sucesso
+          description: Transacao processada com sucesso
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   new_balance:
-                    type: number
-                    example: 750.50
+                    type: integer
+                    format: int64
+                    description: Saldo apos a transacao, em centavos
+                    example: 75050
+        '400':
+          description: Tipo ou valor invalido
+        '404':
+          description: Conta nao encontrada
         '422':
-          description: Saldo insuficiente ou conta inválida
+          description: Saldo insuficiente ou erro de negocio
