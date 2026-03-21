@@ -1,3 +1,21 @@
+## [1.0.5](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.4...v1.0.5) (2026-03-21)
+
+### CI/CD
+
+* **ci:** corrigir release com deps npm e paralelizar lint com testes ([11ab4e6](https://github.com/victorh-silveira/go-wallet-core/commit/11ab4e650d50e651482f54ad396b510319dc0d2e))
+
+### Chore
+
+* **config:** unificar fluxo local e ci com regras centralizadas ([32e22b7](https://github.com/victorh-silveira/go-wallet-core/commit/32e22b7742fc991abb3c78a2e59ae033008b9fa3))
+
+### Documentacao
+
+* **docs:** atualizar estrutura e guias do projeto ([088479d](https://github.com/victorh-silveira/go-wallet-core/commit/088479d05d7c679e3b3e86230ba21aefa23cccaa))
+
+### Refatoracao
+
+* **infra:** reorganizar codigo para nova estrutura em camadas ([0670392](https://github.com/victorh-silveira/go-wallet-core/commit/06703922ff56622ee2154eabb36d091325c7c080))
+
 ## [1.0.4](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.3...v1.0.4) (2026-03-19)
 
 ### Documentacao
