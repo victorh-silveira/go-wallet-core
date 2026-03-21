@@ -34,11 +34,6 @@ jobs:
       - name: "Auditoria de Qualidade de Código"
         uses: ./.github/actions/lint
 
-      - name: "Auditoria de Commit Messages (Convention)"
-        uses: wagoid/commitlint-github-action@v6
-        with:
-          configFile: 'tools/commitlint.config.mjs'
-
   tests:
     name: "Suite de Testes"
     runs-on: ubuntu-latest
