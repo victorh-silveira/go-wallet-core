@@ -5,12 +5,11 @@ on:
     branches: [ main ]
     paths:
       - '.github/**'
-      - '.releaserc.json'
-      - 'commitlint.config.mjs'
       - 'go.mod'
       - 'go.sum'
-      - 'src/**'
       - 'scripts/**'
+      - 'src/**'
+      - 'tools/**'
 
   pull_request:
     branches: [ main ]
@@ -38,7 +37,19 @@ jobs:
       - name: "Auditoria de Commit Messages (Convention)"
         uses: wagoid/commitlint-github-action@v6
         with:
-          configFile: 'commitlint.config.mjs'
+          configFile: 'tools/commitlint.config.mjs'
+
+  tests:
+    name: "Suite de Testes"
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout do Código"
+        uses: actions/checkout@v4
+
+      - name: "Executar Testes Automatizados"
+        uses: ./.github/actions/test
 
   security:
     name: "Scan de Segurança"
@@ -56,7 +67,7 @@ jobs:
 
   release:
     name: "Release Automática"
-    needs: security
+    needs: [security, tests]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10

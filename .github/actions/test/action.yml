@@ -1,0 +1,14 @@
+name: 'Acao de Testes Go'
+description: 'Executa testes automatizados do projeto'
+runs:
+  using: "composite"
+  steps:
+    - name: "Configurar Go"
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.26'
+        cache: true
+
+    - name: "Executar testes (go test)"
+      shell: bash
+      run: go test ./...

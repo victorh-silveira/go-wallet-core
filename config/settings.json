@@ -1,0 +1,5 @@
+{
+  "app_name": "go-wallet-core",
+  "env": "development",
+  "http_port": 8080
+}

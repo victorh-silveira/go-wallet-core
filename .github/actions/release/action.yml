@@ -35,4 +35,4 @@ runs:
           -p @semantic-release/git \
           -p @semantic-release/github \
           -p conventional-changelog-conventionalcommits \
-          semantic-release
+          semantic-release --extends ./tools/releaserc.json
