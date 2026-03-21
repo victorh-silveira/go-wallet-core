@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/usecase/wallet"
+	"github.com/victor-silveira/go-wallet-core/src/application/wallet"
 )
 
 type WalletHandler struct {

@@ -1,10 +1,10 @@
-package usecase
+package user
 
 import (
 	"context"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/repository"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/domain/repository"
 )
 
 type CreateUserRequest struct {
@@ -30,7 +30,6 @@ func NewCreateUserUseCase(userRepo repository.UserRepository) *CreateUserUseCase
 }
 
 func (u *CreateUserUseCase) Execute(ctx context.Context, request CreateUserRequest) (CreateUserResponse, error) {
-
 	domainUser, err := entity.NewUser(request.ID, request.Name, request.Email)
 	if err != nil {
 		return CreateUserResponse{}, err

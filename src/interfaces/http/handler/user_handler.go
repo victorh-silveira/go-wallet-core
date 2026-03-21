@@ -4,21 +4,20 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/usecase/user"
+	"github.com/victor-silveira/go-wallet-core/src/application/user"
 )
 
 type UserHandler struct {
-	createUserUseCase *usecase.CreateUserUseCase
+	createUserUseCase *user.CreateUserUseCase
 }
 
-func NewUserHandler(createUserUseCase *usecase.CreateUserUseCase) *UserHandler {
+func NewUserHandler(createUserUseCase *user.CreateUserUseCase) *UserHandler {
 	return &UserHandler{
 		createUserUseCase: createUserUseCase,
 	}
 }
 
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != http.MethodPost {
 		RespondWithError(w, http.StatusMethodNotAllowed, "Método não permitido")
 		return
@@ -29,7 +28,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req usecase.CreateUserRequest
+	var req user.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		RespondWithError(w, http.StatusBadRequest, "Formato JSON inválido")
 		return
@@ -37,7 +36,6 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	res, err := h.createUserUseCase.Execute(r.Context(), req)
 	if err != nil {
-
 		RespondWithError(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}

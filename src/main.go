@@ -8,11 +8,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
-	"github.com/victor-silveira/go-wallet-core/src/internal/infrastructure/repository/postgres"
-	"github.com/victor-silveira/go-wallet-core/src/internal/interface/http/handler"
-	"github.com/victor-silveira/go-wallet-core/src/internal/usecase/user"
-	"github.com/victor-silveira/go-wallet-core/src/internal/usecase/wallet"
+	"github.com/victor-silveira/go-wallet-core/src/application/user"
+	"github.com/victor-silveira/go-wallet-core/src/application/wallet"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/infrastructure/repository/postgres"
+	"github.com/victor-silveira/go-wallet-core/src/interfaces/http/handler"
 )
 
 const AppVersion = "1.0.0"
@@ -23,7 +23,7 @@ func main() {
 	userRepo := postgres.NewUserRepository()
 	walletRepo := postgres.NewWalletRepository()
 
-	createUserUseCase := usecase.NewCreateUserUseCase(userRepo)
+	createUserUseCase := user.NewCreateUserUseCase(userRepo)
 	processTrxUseCase := wallet.NewProcessTransactionUseCase(walletRepo, walletRepo)
 
 	userHandler := handler.NewUserHandler(createUserUseCase)
@@ -68,5 +68,4 @@ func main() {
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed to start: %v", err)
 	}
-
 }

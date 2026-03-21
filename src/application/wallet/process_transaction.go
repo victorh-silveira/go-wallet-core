@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/repository"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/domain/repository"
 )
 
 type ProcessTransactionRequest struct {

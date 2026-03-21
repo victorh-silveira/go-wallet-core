@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
 )
 
 type UserRepository interface {

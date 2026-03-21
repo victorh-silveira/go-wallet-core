@@ -1,14 +1,15 @@
-package postgres
+package infrastructure_test
 
 import (
 	"context"
 	"testing"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/infrastructure/repository/postgres"
 )
 
 func TestUserRepositoryReturnsUserCopy(t *testing.T) {
-	repo := NewUserRepository()
+	repo := postgres.NewUserRepository()
 	user := &entity.User{
 		ID:    "USER-001",
 		Name:  "Victor",

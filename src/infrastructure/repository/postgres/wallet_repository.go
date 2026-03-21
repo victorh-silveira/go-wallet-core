@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/victor-silveira/go-wallet-core/src/internal/domain/entity"
+	"github.com/victor-silveira/go-wallet-core/src/domain/entity"
 )
 
 type WalletRepository struct {
