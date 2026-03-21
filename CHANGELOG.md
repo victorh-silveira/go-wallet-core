@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/victorh-silveira/go-wallet-core/compare/v1.1.0...v1.1.1) (2026-03-21)
+
+### Documentacao
+
+* **docs:** badge CI shields e versao nos logs com git ldflags ([89bdaed](https://github.com/victorh-silveira/go-wallet-core/commit/89bdaed1265cc769448341944c6c21f4a1363288))
+
 ## [1.1.0](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.6...v1.1.0) (2026-03-21)
 
 ### CI/CD
