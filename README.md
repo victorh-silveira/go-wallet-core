@@ -4,7 +4,7 @@
 [![Lint](https://img.shields.io/badge/Lint-golangci--lint-00C7B7?logo=go&logoColor=white)](.github/actions/lint/action.yml)
 [![Tests](https://img.shields.io/badge/Tests-go%20test-0F9D58?logo=go&logoColor=white)](#testes)
 [![Pre-commit](https://img.shields.io/badge/Hooks-pre--commit-FAB040?logo=pre-commit&logoColor=white)](.pre-commit-config.yaml)
-[![CI](https://github.com/victor-h-silveira/go-wallet-core/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/victor-h-silveira/go-wallet-core/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/victor-silveira/go-wallet-core/ci.yml?branch=main&logo=github&label=CI)](https://github.com/victor-silveira/go-wallet-core/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/badge/Release-semantic--release-494949?logo=semantic-release&logoColor=white)](tools/releaserc.json)
 [![API](https://img.shields.io/badge/API-REST-0A1E3F?logo=fastapi&logoColor=white)](api/swagger.yaml)
 [![OpenAPI](https://img.shields.io/badge/Spec-OpenAPI-6BA539?logo=swagger&logoColor=white)](api/swagger.yaml)
@@ -31,10 +31,10 @@ Se voce tiver o Go instalado:
 
 1.  Aponte para o diretorio raiz do projeto.
 2.  Assure-se de que o `go.mod` esta configurado corretamente.
-3.  Execute o comando:
+3.  Execute o comando (inclui todo o pacote `main` em `src/`, ex. `version.go`):
 
 ```bash
-go run src/main.go
+go run ./src
 ```
 
 Por padrao, a aplicacao inicia com uma conta seed:
@@ -42,12 +42,33 @@ Por padrao, a aplicacao inicia com uma conta seed:
 - `account_id`: `ACC-001`
 - `balance`: `50000` centavos (R$ 500,00)
 
-Os logs sao emitidos em **JSON** no stdout (nivel `INFO`). Para encerrar com seguranca, use **Ctrl+C** (SIGINT) ou envie o processo para um orquestrador que envie SIGTERM; o servidor conclui requisicoes ativas ate o timeout de shutdown.
+Os logs sao emitidos em **JSON** no stdout (nivel `INFO`). A primeira entrada inclui **`version`**, **`commit`** e **`go`** (runtime). Valores padrao sem build de release: `version` e `commit` = `dev`. Para encerrar com seguranca, use **Ctrl+C** (SIGINT) ou SIGTERM; o servidor conclui requisicoes ativas ate o timeout de shutdown.
 
 Para iniciar sem seed:
 
 ```bash
-SEED_DEFAULT_ACCOUNT=false go run src/main.go
+SEED_DEFAULT_ACCOUNT=false go run ./src
+```
+
+**Versao (Git) e build**
+
+Consultar versao do repositorio local (tags e estado de working tree):
+
+```bash
+git describe --tags --always --dirty
+git rev-parse --short HEAD
+```
+
+Arranque com versao e commit injetados via `ldflags`:
+
+```bash
+go run -ldflags "-X main.Version=$(git describe --tags --always --dirty) -X main.Commit=$(git rev-parse --short HEAD)" ./src
+```
+
+Binario de producao (exemplo):
+
+```bash
+go build -o bin/go-wallet-core -ldflags "-X main.Version=$(git describe --tags --always --dirty) -X main.Commit=$(git rev-parse --short HEAD)" ./src
 ```
 
 **Qualidade e Ciclo de Commits**

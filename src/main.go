@@ -17,13 +17,15 @@ import (
 	"github.com/victor-silveira/go-wallet-core/src/interfaces/http/handler"
 )
 
-const AppVersion = "1.0.0"
-
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	slog.SetDefault(logger)
 
-	slog.Info("iniciando servico", "version", AppVersion)
+	slog.Info("iniciando servico",
+		"version", Version,
+		"commit", Commit,
+		"go", goRuntimeVersion(),
+	)
 
 	userRepo := memory.NewUserRepository()
 	walletRepo := memory.NewWalletRepository()
@@ -33,7 +35,7 @@ func main() {
 
 	userHandler := handler.NewUserHandler(createUserUseCase)
 	walletHandler := handler.NewWalletHandler(processTrxUseCase)
-	healthHandler := handler.NewHealthHandler(AppVersion)
+	healthHandler := handler.NewHealthHandler(Version)
 
 	if os.Getenv("SEED_DEFAULT_ACCOUNT") != "false" {
 		ctx := context.Background()
