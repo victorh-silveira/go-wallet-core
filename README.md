@@ -89,11 +89,13 @@ Executar testes localmente:
 go test ./...
 ```
 
-Testes adicionados no projeto:
+Organizacao dos testes (ver [`tests/readme.md`](tests/readme.md)):
 
-- `tests/unit/application/process_transaction_test.go`
-- `tests/unit/infrastructure/user_repository_test.go`
-- `tests/unit/infrastructure/wallet_repository_test.go`
+- `tests/unit/domain/entity` — entidades
+- `tests/unit/application` — casos de uso
+- `tests/unit/handler` — HTTP (`httptest`)
+- `tests/unit/infrastructure` — repositorio em memoria
+- `tests/integration` — fluxo com repositorios reais em memoria
 
 **Release e Changelog**
 
@@ -144,4 +146,4 @@ curl.exe -X POST "http://localhost:8080/wallet/transaction" \
 1.  Persistencia real (PostgreSQL ou outro) mantendo `repository` interfaces.
 2.  Middleware de observabilidade (metricas, tracing).
 3.  Contrato de erros HTTP padronizado (codigos de erro de dominio).
-4.  Testes de integracao e contrato.
+4.  Contrato OpenAPI automatizado (schema vs respostas) e E2E opcional.

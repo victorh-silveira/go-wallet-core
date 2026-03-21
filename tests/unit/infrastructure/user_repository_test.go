@@ -36,3 +36,11 @@ func TestUserRepositoryReturnsUserCopy(t *testing.T) {
 		t.Fatalf("repository should return user copy, expected Victor got %s", reloaded.Name)
 	}
 }
+
+func TestUserRepositoryGetByIDNotFound(t *testing.T) {
+	repo := memory.NewUserRepository()
+	_, err := repo.GetByID(context.Background(), "missing")
+	if err == nil {
+		t.Fatal("expected error")
+	}
+}

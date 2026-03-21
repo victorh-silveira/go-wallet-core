@@ -34,4 +34,5 @@ runs:
           conventional-changelog-conventionalcommits
 
         cd "${GITHUB_WORKSPACE}"
+        export NODE_PATH="${SR}/node_modules${NODE_PATH:+:${NODE_PATH}}"
         "$SR/node_modules/.bin/semantic-release" --extends ./tools/releaserc.json
