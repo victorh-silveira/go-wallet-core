@@ -1,3 +1,17 @@
+## [1.1.0](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.6...v1.1.0) (2026-03-21)
+
+### CI/CD
+
+* **ci:** remover commitlint no ci e dependencias npm do repo ([5594f34](https://github.com/victorh-silveira/go-wallet-core/commit/5594f34d89f4bc741bb6410e04624502a7ed1035))
+
+### Chore
+
+* **repo:** suite de testes completa, docs e NODE_PATH no release ([ba0fdbc](https://github.com/victorh-silveira/go-wallet-core/commit/ba0fdbc0d8ef1a2649b67fdf3e7b4e873cd09f69))
+
+### Nova Funcionalidade
+
+* **wallet:** centavos int64, repos em memory, slog e shutdown gracioso ([5ffd33e](https://github.com/victorh-silveira/go-wallet-core/commit/5ffd33eeca9cf5a3ba386bd75988191a4e0fdd6f))
+
 ## [1.0.6](https://github.com/victorh-silveira/go-wallet-core/compare/v1.0.5...v1.0.6) (2026-03-21)
 
 ### Chore
