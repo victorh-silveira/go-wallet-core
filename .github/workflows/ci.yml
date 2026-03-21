@@ -92,8 +92,6 @@ jobs:
           git fetch --tags --force --prune
           
           echo "Analisando tags órfãs (não pertencentes ao histórico de main)..."
-          # Em fluxos com force-push, tags podem ficar apontando para commits descartados.
-          # Este loop identifica tags 'v*' que não são ancestrais de main e as remove do remoto.
           for tag in $(git tag -l "v*"); do
             if ! git merge-base --is-ancestor "$tag" main 2>/dev/null; then
               echo ">> Deletando tag órfã detectada no remoto: $tag"

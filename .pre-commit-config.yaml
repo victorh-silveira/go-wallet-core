@@ -5,20 +5,20 @@ repos:
   - repo: local
     hooks:
       - id: clean-workspace
-        name: validar qualidade e seguranca (fmt, vet, tidy, lint, gosec, govulncheck)
+        name: Validar qualidade e seguranca (fmt, vet, tidy, lint, gosec, govulncheck)
         entry: go run ./scripts/core/clean_workspace.go
         language: system
         pass_filenames: false
         stages: [pre-commit]
 
       - id: commitlint
-        name: validar mensagem de commit (conventional commits)
+        name: Validar mensagem de commit (conventional commits)
         entry: npx --yes -p @commitlint/cli -p @commitlint/config-conventional commitlint --config tools/commitlint.config.mjs --edit
         language: system
         stages: [commit-msg]
 
       - id: go-test
-        name: executar testes automatizados (go test)
+        name: Executar testes automatizados (go test)
         entry: go test ./...
         language: system
         pass_filenames: false

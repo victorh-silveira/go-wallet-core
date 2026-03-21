@@ -31,5 +31,4 @@ runs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        # Binario e plugins no mesmo node_modules (tools/) para resolucao de modulos
         ./tools/node_modules/.bin/semantic-release --extends ./tools/releaserc.json

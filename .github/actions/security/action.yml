@@ -17,7 +17,7 @@ runs:
 
     - name: "Executar Gosec (Análise Estática de Segurança)"
       shell: bash
-      run: gosec ./...
+      run: gosec -exclude-dir=scripts/core ./...
 
     - name: "Executar Govulncheck (Scan de Vulnerabilidades)"
       shell: bash

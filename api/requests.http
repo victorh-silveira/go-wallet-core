@@ -21,7 +21,6 @@ Content-Type: application/json
 ---
 
 ### [POST] Depositar Crédito (Deposit) na Conta Default
-# @account_id = ACC-001 (Pré-carregada no main.go)
 POST {{host}}/wallet/transaction
 Content-Type: application/json
 

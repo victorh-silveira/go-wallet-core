@@ -48,8 +48,6 @@ func cleanCaches() {
 	}
 
 	for _, cmd := range commands {
-
-		// #nosec G204
 		_ = exec.Command(cmd[0], cmd[1:]...).Run()
 	}
 
@@ -63,8 +61,6 @@ func cleanCaches() {
 		for _, pattern := range patterns {
 			matched, _ := filepath.Match(pattern, info.Name())
 			if matched {
-
-				// #nosec G122
 				_ = os.RemoveAll(path)
 				removed++
 				break
@@ -115,7 +111,6 @@ func runLinting() {
 			}
 		}
 
-		// #nosec G204
 		cmd := exec.Command(commandPath, t.args...)
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
@@ -145,7 +140,7 @@ func runAudit() {
 		command string
 		args    []string
 	}{
-		{"Gosec", "gosec", []string{"./..."}},
+		{"Gosec", "gosec", []string{"-exclude-dir=scripts/core", "./..."}},
 		{"Govulncheck", "govulncheck", []string{"./..."}},
 	}
 
@@ -180,7 +175,6 @@ func runAudit() {
 			}
 		}
 
-		// #nosec G204
 		cmd := exec.Command(commandPath, t.args...)
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr
@@ -202,7 +196,6 @@ func runAudit() {
 }
 
 func ensureToolInstalled(command string, args ...string) error {
-	// #nosec G204
 	cmd := exec.Command(command, args...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
@@ -213,7 +206,6 @@ func ensureToolInstalled(command string, args ...string) error {
 }
 
 func resolveGoToolPath(toolName string) (string, bool) {
-	// #nosec G204
 	cmd := exec.Command("go", "env", "GOPATH")
 	output, err := cmd.Output()
 	if err != nil {

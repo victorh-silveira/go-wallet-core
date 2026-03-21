@@ -1,5 +1,3 @@
-# --- Binários e Executáveis ---
-# Arquivos compilados e executáveis específicos de cada SO
 *.exe
 *.exe~
 *.dll
@@ -7,33 +5,21 @@
 *.dylib
 bin/
 
-# --- Testes e Cobertura ---
-# Binários de teste e relatórios de cobertura
 *.test
 *.out
 coverage.txt
 
-# --- Dependências e Workspace ---
-# Arquivos relacionados a dependências e ao workspace do Go
-# vendor/
 go.work
 go.work.sum
 
-# Node (semantic-release em tools/)
 node_modules/
 
-# --- Logs ---
-# Arquivos de log gerados pela aplicação
 *.log
 
-# --- IDEs e Editores ---
-# Configurações do VS Code, JetBrains, etc
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# --- Sistema Operacional ---
-# Arquivos temporários do Windows/macOS
 Thumbs.db
 .DS_Store

@@ -1,4 +1,4 @@
-# Go Wallet Core API Service (Go)
+**Go Wallet Core API Service (Go)**
 
 [![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)](go.mod)
 [![Lint](https://img.shields.io/badge/Lint-golangci--lint-00C7B7?logo=go&logoColor=white)](.github/actions/lint/action.yml)
@@ -11,7 +11,7 @@
 
 Este projeto segue os princípios de **Domain-Driven Design (DDD)** e **Clean Architecture** para garantir uma base de código modular, testável e manutenível.
 
-## Arquitetura do Projeto
+**Arquitetura do Projeto**
 
 A estrutura de diretórios foi organizada dentro da pasta `src/` para separar as responsabilidades em camadas:
 
@@ -22,7 +22,7 @@ A estrutura de diretórios foi organizada dentro da pasta `src/` para separar as
 - **src/interfaces**: Handlers HTTP e serialização de respostas.
 
 
-## Como Executar
+**Como Executar**
 
 Se você tiver o Go instalado:
 
@@ -45,7 +45,7 @@ Para iniciar sem seed:
 SEED_DEFAULT_ACCOUNT=false go run src/main.go
 ```
 
-## Qualidade e Ciclo de Commits
+**Qualidade e Ciclo de Commits**
 
 O fluxo de qualidade deste projeto e obrigatorio em todo o ciclo:
 
@@ -54,7 +54,7 @@ O fluxo de qualidade deste projeto e obrigatorio em todo o ciclo:
 - **CI**: commitlint + lint em paralelo com testes; em seguida seguranca; na `main`, release apos seguranca.
 - **Release**: `semantic-release` gera versao e atualiza `CHANGELOG.md`.
 
-### Padrao de commit
+**Padrao de commit**
 
 Use o formato:
 
@@ -74,7 +74,9 @@ Regras importantes:
 
 - `type` e `scope` devem respeitar `commitlint.config.mjs`.
 
-## Testes
+<a id="testes"></a>
+
+**Testes**
 
 Executar testes localmente:
 
@@ -88,30 +90,30 @@ Testes adicionados no projeto:
 - `tests/unit/infrastructure/user_repository_test.go`
 - `tests/unit/infrastructure/wallet_repository_test.go`
 
-## Release e Changelog
+**Release e Changelog**
 
 - A liberacao e automatica na branch `main` via `semantic-release`.
 - O changelog oficial e versionado no arquivo `CHANGELOG.md`.
 - O commit automatico de release segue o formato:
   - `chore(release): <versao> [skip ci]`
 
-## Documentação da API
+**Documentação da API**
 
 A API segue padrões REST e possui documentação técnica disponível na pasta `api/`. 
 
 - [OpenAPI (Swagger)](api/swagger.yaml)
 - [REST Client (VSCode)](api/requests.http)
 
-### Endpoints Disponíveis
+**Endpoints Disponíveis**
 
-#### **1. Health Check**
+**1. Health Check**
 `GET /health`
 Verifica se o servidor está online.
 ```bash
 curl.exe -X GET "http://localhost:8080/health"
 ```
 
-#### **2. Criar Usuário**
+**2. Criar Usuário**
 `POST /users`
 Cria um novo usuário no sistema.
 - **Body**: `{ "id": string, "name": string, "email": string }`
@@ -121,18 +123,17 @@ curl.exe -X POST "http://localhost:8080/users" \
   -d '{ \"id\": \"USER-001\", \"name\": \"Victor\", \"email\": \"victor@teste.com\" }'
 ```
 
-#### **3. Processar Transação (Ledger)**
+**3. Processar Transação (Ledger)**
 `POST /wallet/transaction`
 Registra movimentos de entrada (CREDIT) ou saída (DEBIT) na carteira.
 - **Body**: `{ "account_id": string, "type": "DEBIT"|"CREDIT", "amount": float, "description": string }`
 ```bash
-# Exemplo de Crédito
 curl.exe -X POST "http://localhost:8080/wallet/transaction" \
   -H "Content-Type: application/json" \
   -d '{ \"account_id\": \"ACC-001\", \"type\": \"CREDIT\", \"amount\": 250.50, \"description\": \"Recebimento PIX\" }'
 ```
 
-## Próximos Passos
+**Próximos Passos**
 
 1.  Migrar valores monetarios de `float64` para centavos (`int64`) para evitar problemas de precisao.
 2.  Adicionar logs estruturados e middleware de observabilidade.
