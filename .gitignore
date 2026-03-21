@@ -19,6 +19,9 @@ coverage.txt
 go.work
 go.work.sum
 
+# Node (semantic-release em tools/)
+node_modules/
+
 # --- Logs ---
 # Arquivos de log gerados pela aplicação
 *.log

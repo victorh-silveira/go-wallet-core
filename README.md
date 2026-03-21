@@ -51,7 +51,7 @@ O fluxo de qualidade deste projeto e obrigatorio em todo o ciclo:
 
 - **Local (`pre-commit`)**: roda `clean-workspace` com `go run ./scripts/core/clean_workspace.go` e `go test ./...`.
 - **Local (`commit-msg`)**: roda `commitlint` com Conventional Commits.
-- **CI**: valida novamente commitlint e executa qualidade/seguranca.
+- **CI**: commitlint + lint em paralelo com testes; em seguida seguranca; na `main`, release apos seguranca.
 - **Release**: `semantic-release` gera versao e atualiza `CHANGELOG.md`.
 
 ### Padrao de commit

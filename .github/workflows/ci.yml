@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
+  lint:
     name: "Auditoria de Qualidade"
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -41,7 +41,6 @@ jobs:
 
   tests:
     name: "Suite de Testes"
-    needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -53,7 +52,7 @@ jobs:
 
   security:
     name: "Scan de Segurança"
-    needs: quality
+    needs: [lint, tests]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -67,7 +66,7 @@ jobs:
 
   release:
     name: "Release Automática"
-    needs: [security, tests]
+    needs: [security]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10

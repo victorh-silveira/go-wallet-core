@@ -19,6 +19,10 @@ runs:
       with:
         node-version: '22'
 
+    - name: "Instalar dependencias do semantic-release"
+      shell: bash
+      run: npm ci --prefix tools
+
     - name: "Executar Semantic Release"
       shell: bash
       env:
@@ -27,12 +31,5 @@ runs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        npx --yes \
-          -p semantic-release \
-          -p @semantic-release/commit-analyzer \
-          -p @semantic-release/release-notes-generator \
-          -p @semantic-release/changelog \
-          -p @semantic-release/git \
-          -p @semantic-release/github \
-          -p conventional-changelog-conventionalcommits \
-          semantic-release --extends ./tools/releaserc.json
+        # Binario e plugins no mesmo node_modules (tools/) para resolucao de modulos
+        ./tools/node_modules/.bin/semantic-release --extends ./tools/releaserc.json
