@@ -1,3 +1,9 @@
+## [1.1.2](https://github.com/victorh-silveira/go-wallet-core/compare/v1.1.1...v1.1.2) (2026-03-22)
+
+### CI/CD
+
+* **repo:** workflows Go, pre-commit alinhado e acao sync-tags ([747e1ba](https://github.com/victorh-silveira/go-wallet-core/commit/747e1ba355dc2ccbc0617f4015ca37f8ae99a863))
+
 ## [1.1.1](https://github.com/victorh-silveira/go-wallet-core/compare/v1.1.0...v1.1.1) (2026-03-21)
 
 ### Documentacao
