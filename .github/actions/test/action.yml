@@ -1,14 +1,16 @@
-name: 'Acao de Testes Go'
-description: 'Executa testes automatizados do projeto'
+name: Testes Go
+description: Go 1.26 — go test em todo o modulo
+
 runs:
-  using: "composite"
+  using: composite
+
   steps:
-    - name: "Configurar Go"
+    - name: Configurar Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.26'
+        go-version: "1.26"
         cache: true
 
-    - name: "Executar testes (go test)"
+    - name: Executar testes
       shell: bash
-      run: go test ./...
+      run: go test ./... -count=1

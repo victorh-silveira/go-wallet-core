@@ -1,18 +1,23 @@
-name: "Pipeline de CI"
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - '.github/**'
-      - 'go.mod'
-      - 'go.sum'
-      - 'scripts/**'
-      - 'src/**'
-      - 'tools/**'
+      - ".github/**"
+      - "go.mod"
+      - "go.sum"
+      - "README.md"
+      - "docs/**"
+      - "config/**"
+      - "scripts/**"
+      - "src/**"
+      - "tests/**"
+      - "api/**"
+      - "tools/**"
+      - "commitlint.config.mjs"
+      - ".releaserc.json"
 
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 concurrency:
@@ -20,83 +25,74 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: "Auditoria de Qualidade"
+  quality:
+    name: Qualidade — Lint Go
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
-      - name: "Checkout do Código"
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: "Auditoria de Qualidade de Código"
+      - name: Lint
         uses: ./.github/actions/lint
 
   tests:
-    name: "Suite de Testes"
+    name: Testes — Go
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
-      - name: "Checkout do Código"
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: "Executar Testes Automatizados"
+      - name: Testes
         uses: ./.github/actions/test
 
   security:
-    name: "Scan de Segurança"
-    needs: [lint, tests]
+    name: Segurança — Go
+    needs: [quality, tests]
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
-      - name: "Checkout do Código"
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: "Scan de Segurança e Vulnerabilidades"
+      - name: Segurança
         uses: ./.github/actions/security
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    name: "Release Automática"
+    name: Release — Versão
     needs: [security]
+
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+
     permissions:
       contents: write
       issues: write
-      pull-requests: write
+
     steps:
-      - name: "Checkout do Código"
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: "Sincronizar e Limpar Tags"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Limpando tags locais para evitar conflitos..."
-          git tag -l | xargs -n 1 git tag -d || true
-          
-          echo "Sincronizando com o remoto..."
-          git fetch --tags --force --prune
-          
-          echo "Analisando tags órfãs (não pertencentes ao histórico de main)..."
-          for tag in $(git tag -l "v*"); do
-            if ! git merge-base --is-ancestor "$tag" main 2>/dev/null; then
-              echo ">> Deletando tag órfã detectada no remoto: $tag"
-              git push origin --delete "$tag" || true
-              git tag -d "$tag" || true
-            fi
-          done
-
-      - name: "Release Automática"
-        uses: ./.github/actions/release
+      - name: Tags
+        uses: ./.github/actions/sync-tags
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Release
+        uses: ./.github/actions/release
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,19 +1,21 @@
-name: 'Ação de Release Automática'
-description: 'Gera tags e releases baseado no histórico de commits via semantic-release (Go contextual)'
+name: Release semântico
+description: semantic-release — versão, CHANGELOG e GitHub Release (plugins em diretório temporário + NODE_PATH)
+
 inputs:
   github_token:
-    description: 'Token do GitHub'
+    description: Token do GitHub (GITHUB_TOKEN)
     required: true
 
 runs:
-  using: "composite"
+  using: composite
+
   steps:
-    - name: "Configurar Node.js"
+    - name: Configurar Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: "22"
 
-    - name: "Executar Semantic Release"
+    - name: Executar semantic-release
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}

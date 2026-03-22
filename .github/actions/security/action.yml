@@ -1,24 +1,36 @@
-name: 'Ação de Segurança Go'
-description: 'Executa gosec e govulncheck'
+name: Segurança Go
+description: gosec, govulncheck e Gitleaks (segredos no repositório)
+
 runs:
-  using: "composite"
+  using: composite
+
   steps:
-    - name: "Configurar Go"
+    - name: Configurar Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.26'
+        go-version: "1.26"
         cache: true
 
-    - name: "Instalar Ferramentas e Dependências"
+    - name: Instalar gosec e govulncheck
       shell: bash
       run: |
         go install github.com/securego/gosec/v2/cmd/gosec@latest
         go install golang.org/x/vuln/cmd/govulncheck@latest
 
-    - name: "Executar Gosec (Análise Estática de Segurança)"
+    - name: Gosec (analise estatica)
       shell: bash
-      run: gosec -exclude-dir=scripts/core ./...
+      run: "$(go env GOPATH)/bin/gosec -exclude-dir=scripts/core ./..."
 
-    - name: "Executar Govulncheck (Scan de Vulnerabilidades)"
+    - name: Govulncheck (vulnerabilidades na stdlib e deps)
       shell: bash
-      run: govulncheck ./...
+      run: "$(go env GOPATH)/bin/govulncheck ./..."
+
+    - name: Gitleaks — vazamento de segredos
+      shell: bash
+      run: |
+        GITLEAKS_VERSION="8.24.2"
+        curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o /tmp/gitleaks.tar.gz
+        tar -xzf /tmp/gitleaks.tar.gz -C /tmp
+        sudo mv /tmp/gitleaks /usr/local/bin/gitleaks
+        gitleaks version
+        gitleaks detect --source . --verbose --redact
